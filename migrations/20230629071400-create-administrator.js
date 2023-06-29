@@ -31,14 +31,14 @@ module.exports = {
         defaultValue: 0
       },
       status: {
-        type: Sequelize.BOOLEAN,
+        type: Sequelize.STRING,
         allowNull: false,
         defaultValue: true
       },
       lat: {
         type: Sequelize.STRING
       },
-      lng: {
+      lang: {
         type: Sequelize.STRING
       },
       createdAt: {
