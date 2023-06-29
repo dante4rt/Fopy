@@ -165,7 +165,7 @@ describe('login Administrator', function () {
         password: "password123",
       })
     console.log(response.body, "ini login");
-    expect(response.status).toEqual(201)
+    expect(response.status).toEqual(200)
     expect(response.body).toHaveProperty(access_token)
   })
   test('failed POST/admin/login(400)', async function () {
@@ -194,12 +194,42 @@ describe('login Administrator', function () {
   })
 })
 
-describe('get Services', function () {
+describe('read All Services', function () {
   test('GET/admin/services', async function () {
-    const response = await request(app).get('/admin/services')
+    const response = (await request(app).post('/admin/services').set("access_token", access_token))
     expect(response.status).toEqual(200)
   })
+  test('failed GET/admin/services', async function () {
+    const response = (await request(app).post('/admin/services').set("access_token", '2JhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MywiZW1haWwiOiJtdXNhbmdAZ21haWwuY29tIiwiaWF0IjoxNjg1NzAwMDI2fQ.jErs6GoPMYq_tdCjHZlOUjxU9nNePwEwRuU8M53tCQA'))
+    expect(response.status).toEqual(401)
+    expect(response.body).toHaveProperty("message", 'Invalid token ')
+  })
 })
+
+describe('read All Mitra', function () {
+  test('GET/admin/mitra', async function () {
+    const response = (await request(app).post('/admin/mitra').set("access_token", access_token))
+    expect(response.status).toEqual(200)
+  })
+  test('failed GET/admin/mitra', async function () {
+    const response = (await request(app).post('/admin/mitra').set("access_token", '2JhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MywiZW1haWwiOiJtdXNhbmdAZ21haWwuY29tIiwiaWF0IjoxNjg1NzAwMDI2fQ.jErs6GoPMYq_tdCjHZlOUjxU9nNePwEwRuU8M53tCQA'))
+    expect(response.status).toEqual(401)
+    expect(response.body).toHaveProperty("message", 'Invalid token ')
+  })
+})
+
+describe('read All Total Revenues', function () {
+  test('GET/admin/mitra', async function () {
+    const response = (await request(app).post('/admin/revenues').set("access_token", access_token))
+    expect(response.status).toEqual(200)
+  })
+  test('failed GET/admin/mitra', async function () {
+    const response = (await request(app).post('/admin/revenues').set("access_token", '2JhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MywiZW1haWwiOiJtdXNhbmdAZ21haWwuY29tIiwiaWF0IjoxNjg1NzAwMDI2fQ.jErs6GoPMYq_tdCjHZlOUjxU9nNePwEwRuU8M53tCQA'))
+    expect(response.status).toEqual(401)
+    expect(response.body).toHaveProperty("message", 'Invalid token ')
+  })
+})
+
 
 
 
