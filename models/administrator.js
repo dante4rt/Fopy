@@ -11,6 +11,8 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      Administrator.hasMany(models.User)
+      Administrator.hasMany(models.Service)
     }
   }
   Administrator.init({

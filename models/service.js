@@ -11,6 +11,8 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      Service.belongsTo(models.Administrator)
+      Service.hasMany(models.OrderService)
     }
   }
   Service.init({
