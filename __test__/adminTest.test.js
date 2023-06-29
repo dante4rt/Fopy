@@ -4,7 +4,7 @@ const models = require('../models');
 const app = require('../app');
 const bulkInsertAdmin = require('../helpers/bulkInsertAdmin');
 const { signToken, verifyToken } = require('../helpers/jwt');
-
+const { comparePassword } = require('../helpers/bcrypt');
 let access_token
 
 beforeAll(async function () {
@@ -55,7 +55,7 @@ describe('register Account Administrator', function () {
       lang: "-122.4194"
     })
     expect(response.status).toEqual(400);
-    expect(response.body).toHaveProperty("msg", "Email is required")
+    expect(response.body).toHaveProperty("message", "Email is required")
   })
   test('failed POST/admin/register(400)', async function () {
     const response = await request(app).post('/admin/register').send({
@@ -69,7 +69,7 @@ describe('register Account Administrator', function () {
       lang: "-122.4194"
     })
     expect(response.status).toEqual(400);
-    expect(response.body).toHaveProperty("msg", "Password is required")
+    expect(response.body).toHaveProperty("message", "Password is required")
   })
   test('failed POST/admin/register(400)', async function () {
     const response = await request(app).post('/admin/register').send({
@@ -83,7 +83,7 @@ describe('register Account Administrator', function () {
       lang: "-122.4194"
     })
     expect(response.status).toEqual(400);
-    expect(response.body).toHaveProperty("msg", "Role is required")
+    expect(response.body).toHaveProperty("message", "Role is required")
   })
   test('failed POST/admin/register(400)', async function () {
     const response = await request(app).post('/admin/register').send({
@@ -97,7 +97,7 @@ describe('register Account Administrator', function () {
       lang: "-122.4194"
     })
     expect(response.status).toEqual(400);
-    expect(response.body).toHaveProperty("msg", "Role is required")
+    expect(response.body).toHaveProperty("message", "Role is required")
   })
   test('failed POST/admin/register(400)', async function () {
     const response = await request(app).post('/admin/register').send({
@@ -111,7 +111,7 @@ describe('register Account Administrator', function () {
       lang: "-122.4194"
     })
     expect(response.status).toEqual(400);
-    expect(response.body).toHaveProperty("msg", "Balance is required")
+    expect(response.body).toHaveProperty("message", "Balance is required")
   })
   test('failed POST/admin/register(400)', async function () {
     const response = await request(app).post('/admin/register').send({
@@ -125,7 +125,7 @@ describe('register Account Administrator', function () {
       lang: "-122.4194"
     })
     expect(response.status).toEqual(400);
-    expect(response.body).toHaveProperty("msg", "Status is required")
+    expect(response.body).toHaveProperty("message", "Status is required")
   })
   test('failed POST/admin/register(400)', async function () {
     const response = await request(app).post('/admin/register').send({
@@ -139,7 +139,7 @@ describe('register Account Administrator', function () {
       lang: "-122.4194"
     })
     expect(response.status).toEqual(400);
-    expect(response.body).toHaveProperty("msg", "Email must be unique")
+    expect(response.body).toHaveProperty("message", "Email must be unique")
   })
   test('failed POST/admin/register(400)', async function () {
     const response = await request(app).post('/admin/register').send({
@@ -153,11 +153,11 @@ describe('register Account Administrator', function () {
       lang: "-122.4194"
     })
     expect(response.status).toEqual(400);
-    expect(response.body).toHaveProperty("msg", "Invalid email format")
+    expect(response.body).toHaveProperty("message", "Invalid email format")
   })
 })
 
-describe('Login Administrator', function () {
+describe('login Administrator', function () {
   test('POST/admin/login', async function () {
     const response = await request(app).post('/admin/login').send
       ({
@@ -174,7 +174,7 @@ describe('Login Administrator', function () {
       password: ""
     })
     expect(response.status).toEqual(400);
-    expect(response.body).toHaveProperty("msg", "Password is required")
+    expect(response.body).toHaveProperty("message", "Password is required")
   })
   test('failed POST/admin/login(400)', async function () {
     const response = await request(app).post('/admin/login').send({
@@ -182,7 +182,7 @@ describe('Login Administrator', function () {
       password: "password123",
     })
     expect(response.status).toEqual(400);
-    expect(response.body).toHaveProperty("msg", "Email is required")
+    expect(response.body).toHaveProperty("message", "Email is required")
   })
   test('failed POST/admin/login(401)', async function () {
     const response = await request(app).post('/admin/login').send({
@@ -190,7 +190,17 @@ describe('Login Administrator', function () {
       password: "password12345",
     })
     expect(response.status).toEqual(401);
-    expect(response.body).toHaveProperty("msg", "Invalid email/password")
+    expect(response.body).toHaveProperty("message", "Invalid email/password")
   })
 })
+
+describe('get Services', function () {
+  test('GET/admin/services', async function () {
+    const response = await request(app).get('/admin/services')
+    expect(response.status).toEqual(200)
+  })
+})
+
+
+
 
