@@ -1,10 +1,12 @@
-const express = require('express')
-const driverController = require('../controllers/driverController')
-const router = express.Router()
+const express = require('express');
+const driverController = require('../controllers/driverController');
+const authentication = require('../middlewares/authentication');
+const router = express.Router();
 
-router.get('/', (req, res) => {
-    res.send('Hello World Driver!')
-  })
-router.post('/login', driverController.login)
+router.post('/login', driverController.login);
 
-module.exports = router
+router.use(authentication);
+
+router.get('/orders', driverController.fetchOrders);
+router.patch('/orders/:id', driverController.updateStatus);
+module.exports = router;
