@@ -14,15 +14,62 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   Order.init({
-    UserId: DataTypes.INTEGER,
-    totalAmount: DataTypes.INTEGER,
-    isPaid: DataTypes.BOOLEAN,
-    orderItem: DataTypes.STRING,
-    orderStatus: DataTypes.STRING,
-    orderDate: DataTypes.DATE,
-    deliveryMethod: DataTypes.STRING,
-    invoiceId: DataTypes.INTEGER,
-    OrderServiceId: DataTypes.INTEGER
+    AdministratorId: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      validate: {
+        notEmpty: { msg: 'Administrator ID is required' },
+        notNull: { msg: 'Administrator ID is required' },
+      }
+    },
+    UserId: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      validate: {
+        notEmpty: { msg: 'User ID is required' },
+        notNull: { msg: 'User ID is required' },
+      }
+    },
+    totalPrice: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      validate: {
+        notEmpty: { msg: 'Total price is required' },
+        notNull: { msg: 'Total price is required' },
+      }
+    },
+    orderItem: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      validate: {
+        notEmpty: { msg: 'Order item is required' },
+        notNull: { msg: 'Order item is required' },
+      }
+    },
+    orderStatus: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      validate: {
+        notEmpty: { msg: 'Order status is required' },
+        notNull: { msg: 'Order status is required' },
+      }
+    },
+    orderDate: {
+      type: DataTypes.DATE,
+      allowNull: false,
+      validate: {
+        notEmpty: { msg: 'Order date is required' },
+        notNull: { msg: 'Order date is required' },
+      }
+    },
+    InvoiceId: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      validate: {
+        notEmpty: { msg: 'Invoice ID is required' },
+        notNull: { msg: 'Invoice ID is required' },
+      }
+    }
   }, {
     sequelize,
     modelName: 'Order',

@@ -14,11 +14,49 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   OrderService.init({
-    ServiceId: DataTypes.INTEGER,
-    OrderId: DataTypes.INTEGER,
-    quantity: DataTypes.INTEGER,
+    ServiceId: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      validate: {
+        notEmpty: { msg: 'Service ID is required' },
+        notNull: { msg: 'Service ID is required' },
+      }
+    },
+    OrderServiceID: DataTypes.INTEGER,
+    UserId: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      validate: {
+        notEmpty: { msg: 'User ID is required' },
+        notNull: { msg: 'User ID is required' },
+      }
+    },
+    name: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      validate: {
+        notEmpty: { msg: 'Order service name is required' },
+        notNull: { msg: 'Order service name is required' },
+      }
+    },
+    quantity: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      validate: {
+        notEmpty: { msg: 'Quantity is required' },
+        notNull: { msg: 'Quantity is required' },
+      }
+    },
     totalPage: DataTypes.INTEGER,
-    url: DataTypes.STRING
+    url: DataTypes.STRING,
+    deliveryMethod: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      validate: {
+        notEmpty: { msg: 'Delivery method is required' },
+        notNull: { msg: 'Delivery method is required' },
+      }
+    }
   }, {
     sequelize,
     modelName: 'OrderService',

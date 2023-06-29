@@ -27,10 +27,10 @@ STEPS :
  npx sequelize init (edit config.json bagian test, nama table => FopyDB_test)
  npx sequelize db:create --env test
 
- npx sequelize model:create --name Administrator --attributes mitraName:string,email:string,password:string,role:string,balance:integer,status:boolean,lat:string,lng:string
- npx sequelize model:create --name User --attributes username:string,email:string,password:string,balance:integer,imgUrl:string,lat:string,lng:string
+ npx sequelize model:create --name Administrator --attributes mitraName:string,email:string,password:string,role:string,balance:integer,status:boolean,lat:string,lang:string
+ npx sequelize model:create --name User --attributes username:string,email:string,password:string,balance:integer,imgUrl:string,lat:string,lang:string
+ npx sequelize model:create --name Service --attributes AdministratorId:integer,name:string,price:integer,description:string,imgUrl:string
+ npx sequelize model:create --name OrderService --attributes OrderServiceId:integer,ServiceId:integer,UserId:integer,name:string,quantity:integer,totalPage:integer,url:string,deliveryMethod:string
  npx sequelize model:create --name Order --attributes AdministratorId:integer,UserId:integer,totalPrice:integer,orderItem:string,orderStatus:string,orderDate:date,InvoiceId:string
- npx sequelize model:create --name OrderService --attributes ServiceId:integer,UserId:integer,name:string,quantity:integer,totalPage:integer,url:string,deliveryMethod:string
- npx sequelize model:create --name Service -- attributes AdministratorId:integer,name:string,price:integer,description:string,imgUrl:string
 
  npx sequelize db:migrate --env test

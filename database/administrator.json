@@ -1,0 +1,33 @@
+[
+    {
+      "mitraName": "John Doe",
+      "email": "john.doe@example.com",
+      "password": "password123",
+      "role": "admin",
+      "balance": 5000,
+      "status": "active",
+      "lat": "37.7749",
+      "lang": "-122.4194"
+    },
+    {
+      "mitraName": "Jane Smith",
+      "email": "jane.smith@example.com",
+      "password": "password456",
+      "role": "mitra",
+      "balance": 3000,
+      "status": "active",
+      "lat": "40.7128",
+      "lang": "-74.0060"
+    },
+    {
+      "mitraName": "David Johnson",
+      "email": "david.johnson@example.com",
+      "password": "password789",
+      "role": "driver",
+      "balance": 1000,
+      "status": "active",
+      "lat": "51.5074",
+      "lang": "-0.1278"
+    }
+  ]
+  

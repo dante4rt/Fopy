@@ -3,7 +3,7 @@ const {
   Model
 } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
-  class User extends Model {
+  class Administrator extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
@@ -13,8 +13,8 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
     }
   }
-  User.init({
-    username: DataTypes.STRING,
+  Administrator.init({
+    mitraName: DataTypes.STRING,
     email: {
       type: DataTypes.STRING,
       allowNull: false,
@@ -39,6 +39,14 @@ module.exports = (sequelize, DataTypes) => {
         notNull: { msg: 'Password is required' },
       }
     },
+    role: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      validate: {
+        notEmpty: { msg: 'Role is required' },
+        notNull: { msg: 'Role is required' },
+      }
+    },
     balance: {
       type: DataTypes.INTEGER,
       allowNull: false,
@@ -48,12 +56,20 @@ module.exports = (sequelize, DataTypes) => {
         notNull: { msg: 'Balance is required' },
       }
     },
-    imgUrl: DataTypes.STRING,
+    status: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: true,
+      validate: {
+        notEmpty: { msg: 'Status is required' },
+        notNull: { msg: 'Status is required' },
+      }
+    },
     lat: DataTypes.STRING,
     lang: DataTypes.STRING
   }, {
     sequelize,
-    modelName: 'User',
+    modelName: 'Administrator',
   });
-  return User;
+  return Administrator;
 };
