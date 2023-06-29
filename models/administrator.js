@@ -11,8 +11,11 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      Administrator.hasMany(models.User)
+      Administrator.hasMany(models.Order)
       Administrator.hasMany(models.Service)
+      Administrator.belongsToMany(models.User, {
+        through: models.Order
+      })
     }
   }
   Administrator.init({
