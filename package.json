@@ -4,11 +4,15 @@
   "description": "Fopy is your printing solutions.",
   "main": "index.js",
   "scripts": {
-    "test": "jest --detectOpenHandles --forceExit --coverage --no-cache"
+    "test": "jest --detectOpenHandles --forceExit --no-cache"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/dante4rt/Fopy/issues"
+  },
+  "homepage": "https://github.com/dante4rt/Fopy#readme",
   "dependencies": {
     "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
@@ -16,6 +20,7 @@
     "express": "^4.18.2",
     "jsonwebtoken": "^9.0.0",
     "mysql2": "^3.4.2",
+    "pg": "^8.11.1",
     "postgres": "^3.3.5",
     "sequelize": "^6.32.1"
   },
