@@ -33,19 +33,20 @@ beforeAll(async function () {
         AdministratorId: 1,
         UserId: 1,
         totalPrice: 15000,
-        orderItem: 'Print hitam/putih',
         orderStatus: 'Queued',
         orderDate: '2023-06-30 10:29:14.952 +0700',
-        InvoiceId: 'FOPY-12919129'
+        InvoiceId: 'FOPY-12919129',
+        location: 'xxx xxx',
+        deliveryMethod: 'Delivery'
       },
       {
         AdministratorId: 1,
         UserId: 1,
         totalPrice: 2000,
-        orderItem: 'Print berwarna',
         orderStatus: 'Queued',
         orderDate: '2023-06-30 10:29:14.952 +0700',
-        InvoiceId: 'FOPY-128382'
+        location: 'xxx xxx',
+        deliveryMethod: 'Delivery'
       }
     ]);
   } catch (error) {
@@ -141,7 +142,7 @@ describe('Driver Test', () => {
   });
 
   describe('GET /orders', () => {
-    test.only('200 success get orders', async function() {
+    test('200 success get orders', async function() {
       await request(app)
         .get('/driver/orders')
         .set('access_token', validToken2)
