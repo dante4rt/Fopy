@@ -2,43 +2,31 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('Administrators', {
+    await queryInterface.createTable('Users', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      mitraName: {
+      username: {
         type: Sequelize.STRING
       },
       email: {
         type: Sequelize.STRING,
+        unique: true,
         allowNull: false,
-        unique: true
       },
       password: {
         type: Sequelize.STRING,
-        allowNull: false
-      },
-      role: {
-        type: Sequelize.STRING,
-        allowNull: false
+        allowNull: false,
       },
       balance: {
         type: Sequelize.INTEGER,
+        defaultValue: 0,
         allowNull: false,
-        defaultValue: 0
       },
-      status: {
-        type: Sequelize.STRING,
-        allowNull: false,
-        defaultValue: true
-      },
-      lat: {
-        type: Sequelize.STRING
-      },
-      lang: {
+      imgUrl: {
         type: Sequelize.STRING
       },
       createdAt: {
@@ -52,6 +40,6 @@ module.exports = {
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('Administrators');
+    await queryInterface.dropTable('Users');
   }
 };

@@ -1,4 +1,4 @@
-const errorHandler = (req, res, mext, error) => {
+const errorHandler = (error, req, res, next) => {
   if (
     error.name === 'SequelizeValidationError' ||
     error.name === 'SequelizeUniqueConstraintError'
@@ -14,7 +14,13 @@ const errorHandler = (req, res, mext, error) => {
     res.status(400).json({ message: "Password is required" })
   }
   else if (error.name === "Invalid email/password") {
-    res.status(400).json({ message: "Invalid email/password" })
+    res.status(401).json({ message: "Invalid email/password" })
+  }
+  else if (error.name === "Invalid token") {
+    res.status(401).json({ message: "Invalid token" })
+  }
+  else {
+    res.status(500).json({ message: "Internal server error" })
   }
 
 }

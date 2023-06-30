@@ -11,30 +11,14 @@ module.exports = {
       },
       AdministratorId: {
         type: Sequelize.INTEGER,
-        allowNull: false,
-        references: {
-          model: 'Administrators',
-          key: 'id'
-        },
-        onUpdate: 'cascade',
-        onDelete: 'cascade'
+        allowNull: false
       },
       UserId: {
         type: Sequelize.INTEGER,
-        allowNull: false,
-        references: {
-          model: 'Users',
-          key: 'id'
-        },
-        onUpdate: 'cascade',
-        onDelete: 'cascade'
+        allowNull: false
       },
       totalPrice: {
         type: Sequelize.INTEGER,
-        allowNull: false
-      },
-      orderItem: {
-        type: Sequelize.STRING,
         allowNull: false
       },
       orderStatus: {
@@ -45,7 +29,11 @@ module.exports = {
         type: Sequelize.DATE,
         allowNull: false
       },
-      InvoiceId: {
+      location: {
+        type: Sequelize.GEOMETRY('POINT'),
+        allowNull: false
+      },
+      deliveryMethod: {
         type: Sequelize.STRING,
         allowNull: false
       },

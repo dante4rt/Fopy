@@ -22,8 +22,8 @@ afterAll(async function () {
 })
 
 describe('register Account Administrator', function () {
-  test.only('POST/admin/register(201)', async function () {
-    const response = await request(app).post('/admin/register').send({
+  test('POST/admin/register(201)', async function () {
+    const response = await request(app).post('/admin/register').set("access_token", access_token).send({
       mitraName: "Adel Doe",
       email: "adel.doe@example.com",
       password: "password123",
@@ -39,108 +39,129 @@ describe('register Account Administrator', function () {
       expect(response.body).toHaveProperty('id', expect.any(Number))
     })
   })
-  test.only('failed POST/admin/register(400)', async function () {
-    const response = await request(app).post('/admin/register').send({
-      mitraName: "John Doe",
-      email: "",
-      password: "password123",
-      role: "admin",
-      balance: 5000,
-      status: "active",
-      lat: "37.7749",
-      lang: "-122.4194"
-    })
+  test('failed POST/admin/register(400)', async function () {
+    const response = await request(app)
+      .post('/admin/register')
+      .set("access_token", access_token)
+      .send({
+        mitraName: "John Doe",
+        email: "",
+        password: "password123",
+        role: "admin",
+        balance: 5000,
+        status: "active",
+        lat: "37.7749",
+        lang: "-122.4194"
+      })
     expect(response.status).toEqual(400);
     expect(response.body).toHaveProperty("message", "Email is required")
   })
-  test.only('failed POST/admin/register(400)', async function () {
-    const response = await request(app).post('/admin/register').send({
-      mitraName: "John Doe",
-      email: "john.doe@example.com",
-      password: "",
-      role: "admin",
-      balance: 5000,
-      status: "active",
-      lat: "37.7749",
-      lang: "-122.4194"
-    })
+  test('failed POST/admin/register(400)', async function () {
+    const response = await request(app)
+      .post('/admin/register')
+      .set("access_token", access_token)
+      .send({
+        mitraName: "John Doe",
+        email: "john.doe@example.com",
+        password: "",
+        role: "admin",
+        balance: 5000,
+        status: "active",
+        lat: "37.7749",
+        lang: "-122.4194"
+      })
     expect(response.status).toEqual(400);
     expect(response.body).toHaveProperty("message", "Password is required")
   })
-  test.only('failed POST/admin/register(400)', async function () {
-    const response = await request(app).post('/admin/register').send({
-      mitraName: "John Doe",
-      email: "john.doe@example.com",
-      password: "password123",
-      role: "admin",
-      balance: 5000,
-      status: "active",
-      lat: "37.7749",
-      lang: "-122.4194"
-    })
+  test('failed POST/admin/register(400)', async function () {
+    const response = await request(app)
+      .post('/admin/register')
+      .set("access_token", access_token)
+      .send({
+        mitraName: "John Doe",
+        email: "john.doe@example.com",
+        password: "password123",
+        role: "admin",
+        balance: 5000,
+        status: "active",
+        lat: "37.7749",
+        lang: "-122.4194"
+      })
     expect(response.status).toEqual(400);
     expect(response.body).toHaveProperty("message", "Email must be unique")
   })
-  test.only('failed POST/admin/register(400)', async function () {
-    const response = await request(app).post('/admin/register').send({
-      mitraName: "John Doe",
-      email: "john.doe@example.com",
-      password: "password123",
-      role: "admin",
-      balance: "",
-      status: "active",
-      lat: "37.7749",
-      lang: "-122.4194"
-    })
+  test('failed POST/admin/register(400)', async function () {
+    const response = await request(app)
+      .post('/admin/register')
+      .set("access_token", access_token)
+      .send({
+        mitraName: "John Doe",
+        email: "john.doe@example.com",
+        password: "password123",
+        role: "admin",
+        balance: "",
+        status: "active",
+        lat: "37.7749",
+        lang: "-122.4194"
+      })
     expect(response.status).toEqual(400);
     expect(response.body).toHaveProperty("message", "Balance is required")
   })
-  test.only('failed POST/admin/register(400)', async function () {
-    const response = await request(app).post('/admin/register').send({
-      mitraName: "John Doe",
-      email: "john.doe@example.com",
-      password: "password123",
-      role: "admin",
-      balance: 5000,
-      status: "",
-      lat: "37.7749",
-      lang: "-122.4194"
-    })
+  test('failed POST/admin/register(400)', async function () {
+    const response = await request(app)
+      .post('/admin/register')
+      .set("access_token", access_token)
+      .send({
+        mitraName: "John Doe",
+        email: "john.doe@example.com",
+        password: "password123",
+        role: "admin",
+        balance: 5000,
+        status: "",
+        lat: "37.7749",
+        lang: "-122.4194"
+      })
     expect(response.status).toEqual(400);
     expect(response.body).toHaveProperty("message", "Status is required")
   })
-  test.only('failed POST/admin/register(400)', async function () {
-    const response = await request(app).post('/admin/register').send({
-      mitraName: "John Doe",
-      email: "john.doe@example.com",
-      password: "password123",
-      role: "admin",
-      balance: 5000,
-      status: "active",
-      lat: "37.7749",
-      lang: "-122.4194"
-    })
+  test('failed POST/admin/register(400)', async function () {
+    const response = await request(app)
+      .post('/admin/register')
+      .set("access_token", access_token)
+      .send({
+        mitraName: "John Doe",
+        email: "john.doe@example.com",
+        password: "password123",
+        role: "admin",
+        balance: 5000,
+        status: "active",
+        lat: "37.7749",
+        lang: "-122.4194"
+      })
     expect(response.status).toEqual(400);
     expect(response.body).toHaveProperty("message", "Email must be unique")
   })
-  test.only('failed POST/admin/register(400)', async function () {
-    const response = await request(app).post('/admin/register').send({
-      mitraName: "John Doe",
-      email: "john.doeexample.com",
-      password: "password123",
-      role: "admin",
-      balance: 5000,
-      status: "active",
-      lat: "37.7749",
-      lang: "-122.4194"
-    })
+  test('failed POST/admin/register(400)', async function () {
+    const response = await request(app)
+      .post('/admin/register')
+      .set("access_token", access_token)
+      .send({
+        mitraName: "John Doe",
+        email: "john.doeexample.com",
+        password: "password123",
+        role: "admin",
+        balance: 5000,
+        status: "active",
+        lat: "37.7749",
+        lang: "-122.4194"
+      })
     expect(response.status).toEqual(400);
     expect(response.body).toHaveProperty("message", "Invalid email format")
   })
 })
 
 describe('login Administrator', function () {
-  test.only('POST/admin/login', async function () {
+  test('POST/admin/login', async function () {
     const response = await request(app).post('/admin/login').send
       ({
         email: "john.doe@example.com",
@@ -150,7 +171,7 @@ describe('login Administrator', function () {
     expect(response.status).toEqual(201)
     expect(response.body).toHaveProperty("access_token")
   })
-  test.only('failed POST/admin/login(400)', async function () {
+  test('failed POST/admin/login(400)', async function () {
     const response = await request(app).post('/admin/login').send({
       email: "john.doe@example.com",
       password: ""
@@ -158,7 +179,7 @@ describe('login Administrator', function () {
     expect(response.status).toEqual(400);
     expect(response.body).toHaveProperty("message", "Password is required")
   })
-  test.only('failed POST/admin/login(400)', async function () {
+  test('failed POST/admin/login(400)', async function () {
     const response = await request(app).post('/admin/login').send({
       email: "",
       password: "password123",
@@ -166,7 +187,7 @@ describe('login Administrator', function () {
     expect(response.status).toEqual(400);
     expect(response.body).toHaveProperty("message", "Email is required")
   })
-  test.only('failed POST/admin/login(401)', async function () {
+  test('failed POST/admin/login(401)', async function () {
     const response = await request(app).post('/admin/login').send({
       email: "john.dose@example.com",
       password: "password123",
@@ -175,7 +196,7 @@ describe('login Administrator', function () {
     console.log(response.body, 'bodyyyyyyy ');
     expect(response.body).toHaveProperty("message", "Invalid email/password")
   })
-  test.only('failed POST/admin/login(401)', async function () {
+  test('failed POST/admin/login(401)', async function () {
     const response = await request(app).post('/admin/login').send({
       email: "john.doe@example.com",
       password: "password12345ddd",
@@ -188,13 +209,13 @@ describe('login Administrator', function () {
 
 describe('read All Services', function () {
   test('GET/admin/services', async function () {
-    const response = (await request(app).post('/admin/services').set("access_token", access_token))
+    const response = (await request(app).get('/admin/services').set("access_token", access_token))
     expect(response.status).toEqual(200)
   })
   test('failed GET/admin/services', async function () {
-    const response = (await request(app).post('/admin/services').set("access_token", '2JhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MywiZW1haWwiOiJtdXNhbmdAZ21haWwuY29tIiwiaWF0IjoxNjg1NzAwMDI2fQ.jErs6GoPMYq_tdCjHZlOUjxU9nNePwEwRuU8M53tCQA'))
+    const response = (await request(app).post('/admin/services').set("access_token", ''))
     expect(response.status).toEqual(401)
-    expect(response.body).toHaveProperty("message", 'Invalid token ')
+    expect(response.body).toHaveProperty("message", 'Invalid token')
   })
 })
 

@@ -2,35 +2,29 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('Services', {
+    await queryInterface.createTable('OrderDetails', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      AdministratorId: {
-        type: Sequelize.INTEGER,
-        allowNull: false,
-        references: {
-          model: 'Administrators',
-          key: 'id'
-        },
-        onUpdate: 'cascade',
-        onDelete: 'cascade'
-      },
-      name: {
-        type: Sequelize.STRING,
-        allowNull: false
-      },
-      price: {
+      ServiceId: {
         type: Sequelize.INTEGER,
         allowNull: false
       },
-      description: {
-        type: Sequelize.STRING
+      OrderId: {
+        type: Sequelize.INTEGER,
+        allowNull: false
       },
-      imgUrl: {
+      quantity: {
+        type: Sequelize.INTEGER,
+        allowNull: false
+      },
+      totalPage: {
+        type: Sequelize.INTEGER
+      },
+      url: {
         type: Sequelize.STRING
       },
       createdAt: {
@@ -44,6 +38,6 @@ module.exports = {
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('Services');
+    await queryInterface.dropTable('OrderDetails');
   }
 };
