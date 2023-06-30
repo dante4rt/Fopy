@@ -66,10 +66,14 @@ class driverController {
       const { status } = req.body;
       const user = req.user.id
 
-      await Order.update({ status, AdministratorId: user }, {
-        where: {
-          id
-        }
+      const order = await Order.findByPk(id)
+
+      if (!order) throw { name: 'NOT_FOUND' }
+      
+      await Order.update({ orderStatus: status, AdministratorId: user }, {
+          where: {
+              id
+          }
       })
 
       res.status(200).json({ message: 'Order status has been updated!' })

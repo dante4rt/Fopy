@@ -7,10 +7,11 @@ const authorization = async (req, res, next) => {
 
     if (!data) throw { name: 'NOT_FOUND' };
 
-    if (req.user.id !== data.authorId) throw { name: 'FORBIDDEN' };
+    if (req.user.id !== data.AdministratorId) throw { name: 'FORBIDDEN' };
 
     next();
   } catch (error) {
+    console.log(error);
     next(error);
   }
 };
