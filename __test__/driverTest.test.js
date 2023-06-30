@@ -1,195 +1,274 @@
-const { describe, test, expect } = require('@jest/globals')
-const request = require('supertest')
-const { sequelize } = require('../models')
-const fs = require('fs')
-const app = require('../app')
-const bcrypt = require('bcryptjs')
+const { describe, test, expect } = require('@jest/globals');
+const request = require('supertest');
+const { Administrator, Order, sequelize, User } = require('../models');
+const jwt = require('jsonwebtoken');
+const app = require('../app');
+const SECRET = 'Bismillah';
 
-beforeAll(async () => {
-    // User
-    let dataUsers = JSON.parse(fs.readFileSync("./database/user.json", "utf-8")).map((el) => {
-        el.password = bcrypt.hashSync(el.password)
-        el.createdAt = new Date()
-        el.updatedAt = new Date()
-        delete el.id 
-        return el 
+let validToken2, invalidToken;
+
+beforeAll(async function () {
+  try {
+    await Administrator.create({
+      email: 'user.test1@mail.com',
+      password: 'usertest1',
+      role: 'driver',
+      balance: 5000,
+      status: 'active',
     })
+    .then((registeredUser) => {
+      validToken2 = jwt.sign({
+        id: registeredUser.id,
+        email: registeredUser.email,
+      }, SECRET)})
 
-    await sequelize.queryInterface.bulkInsert('Users', dataUsers)
+      await User.create({
+        email: 'rama@mail.com',
+        password: '12345',
+        balance: 0
+      })
 
-    // Admin
-    let dataAdmin = JSON.parse(fs.readFileSync("./database/administrator.json", "utf-8")).map((el) => {
-        el.createdAt = new Date()
-        el.updatedAt = new Date()
-        el.location = sequelize.fn(
-            'ST_GeomFromText',
-            el.location
-        );
-        delete el.lat;
-        delete el.lang;
-        delete el.id 
-        return el 
-    })
+    await sequelize.queryInterface.bulkInsert('Orders', [
+      {
+        AdministratorId: 1,
+        UserId: 1,
+        totalPrice: 15000,
+        orderStatus: 'Queued',
+        orderDate: '2023-06-30 10:29:14.952 +0700',
+        InvoiceId: 'FOPY-12919129',
+        location: 'xxx xxx',
+        deliveryMethod: 'Delivery'
+      },
+      {
+        AdministratorId: 1,
+        UserId: 1,
+        totalPrice: 2000,
+        orderStatus: 'Queued',
+        orderDate: '2023-06-30 10:29:14.952 +0700',
+        location: 'xxx xxx',
+        deliveryMethod: 'Delivery'
+      }
+    ]);
+  } catch (error) {
+    console.log(error);
+  }
+});
 
-    await sequelize.queryInterface.bulkInsert('Administrators', dataAdmin)
-    
-    // Service 
-    let dataService = JSON.parse(fs.readFileSync("./database/service.json", "utf-8")).map((el) => {
-        el.createdAt = new Date()
-        el.updatedAt = new Date()
-        delete el.id 
-        return el
-    })
-
-    await sequelize.queryInterface.bulkInsert('Services', dataService)
-})
-
-afterAll(async () => {
-    // User
-    await sequelize.queryInterface.bulkDelete('Users', null, {
-        cascade: true,
+afterAll(async function () {
+  await Administrator.destroy({
+    truncate: true,
+    cascade: true,
+    restartIdentity: true,
+  })
+    .then((_) => {
+      return Order.destroy({
         truncate: true,
-        restartIdentity: true,
-    })
-
-    // Admin
-    await sequelize.queryInterface.bulkDelete('Administrators', null, {
         cascade: true,
-        truncate: true,
         restartIdentity: true,
+      });
     })
+    .catch((error) => {
+      console.log(error);
+    });
+});
 
-    // Service 
-    await sequelize.queryInterface.bulkDelete('Services', null, {
-        cascade: true,
-        truncate: true,
-        restartIdentity: true,
-    })
-})
+describe('Driver Test', () => {
+  describe('POST /login - driver login', () => {
+    test('POST /login success', async function () {
+      const response = await request(app).post('/driver/login').send({
+        email: 'user.test1@mail.com',
+        password: 'usertest1',
+      });
 
-describe('Divisi User Test', () => {
-    /* (Create) Section */
+      expect(response.status).toEqual(200);
+      expect(typeof response.body).toEqual('object');
+      expect(response.body).toHaveProperty('access_token');
+      expect(response.body).toHaveProperty('email');
 
-    // User membuat akunnya (Registrasi)
-    describe("POST /user/register", () => {
-        test("Perform successful register new User", async () => {
-            const userDummy = {
-                username: "alexY",
-                email: "alexYII@example.com",
-                password: "securepass1234",
-                balance: 2500,
-                imgUrl: "https://example.com/images/alexyii.jpg"
-            }
-            const response = await request(app).post("/user/register").send(userDummy)
-            expect(response.status).toBe(201)
+      expect(typeof response.body.access_token).toEqual('string');
+      expect(typeof response.body.email).toEqual('string');
+    });
+
+    test('POST /login failed with wrong password', async function () {
+      const response = await request(app)
+        .post('/driver/login')
+        .send({ email: 'user.test1@mail.com', password: 'xxx' });
+
+      expect(response.status).toEqual(401);
+      expect(typeof response.body).toEqual('object');
+      expect(response.body).toHaveProperty('message');
+
+      expect(typeof response.body.message).toEqual('string');
+      expect(response.body.message).toEqual('Invalid email or password');
+    });
+
+    test('POST /login failed because password is empty', async function () {
+      const response = await request(app)
+        .post('/driver/login')
+        .send({ email: 'user.test1@mail.com' });
+
+      expect(response.status).toEqual(400);
+      expect(typeof response.body).toEqual('object');
+      expect(response.body).toHaveProperty('message');
+
+      expect(typeof response.body.message).toEqual('string');
+      expect(response.body.message).toEqual('Password is required');
+    });
+    test('POST /login failed because email is empty', async function () {
+      const response = await request(app)
+        .post('/driver/login')
+        .send({ password: '12345' });
+
+      expect(response.status).toEqual(400);
+      expect(typeof response.body).toEqual('object');
+      expect(response.body).toHaveProperty('message');
+
+      expect(typeof response.body.message).toEqual('string');
+      expect(response.body.message).toEqual('Email is required');
+    });
+
+    test('POST /login failed with email that is not on the database', async function () {
+      const response = await request(app)
+        .post('/driver/login')
+        .send({ email: 'hacktiv8@mail.comx', password: '12345' });
+
+      expect(response.status).toEqual(401);
+      expect(typeof response.body).toEqual('object');
+      expect(response.body).toHaveProperty('message');
+
+      expect(typeof response.body.message).toEqual('string');
+      expect(response.body.message).toEqual('Invalid email or password');
+    });
+  });
+
+  describe('GET /orders', () => {
+    test('200 success get orders', async function() {
+      await request(app)
+        .get('/driver/orders')
+        .set('access_token', validToken2)
+        .then((response) => {
+          const { body, status } = response;
+          console.log(response.body, `<<<`);
+
+          expect(status).toBe(200);
+          expect(Array.isArray(body)).toBeTruthy();
+          expect(body.length).toBeGreaterThan(0);
         })
+        .catch((error) => {
+          console.log(error);
+        });
+    });
 
-        test("POST /user/register if something wrong with server (wrong input type)", async () => {
-            const userDummy = {
-                username: 123123, 
-                email: 123123, 
-                password: 123123, 
-                balance: 35000, 
-                imgUrl: "http://image.url.com", 
-                lat: "012321482", 
-                lang: "02131,43423"
-            }
-            const response = await request(app).post("/user/register").send(userDummy)
-            expect(response.status).toBe(500)
-        })
+    test('401 get orders with invalid token', async function() {
+      await request(app)
+        .get('/driver/orders')
+        .set('access_token', invalidToken)
+        .then((response) => {
+          const { body, status } = response;
 
-        test("POST /register if username doesn't inputed", async () => {
-            const userDummy = {
-                email: "adawong@mail.com", 
-                password: "john", 
-                balance: 35000, 
-                imgUrl: "http://image.url.com", 
-                lat: "012321482", 
-                lang: "02131,43423"
-            }
-            const response = await request(app).post("/user/register").send(userDummy)
-            expect(response.status).toBe(400)
+          expect(status).toBe(401);
+          expect(body).toHaveProperty('message', 'Invalid token');
+          done();
         })
+        .catch((error) => {
+          console.log(error);
+        });
+    });
 
-        test("POST /register if email doesn't inputed", async () => {
-            const userDummy = {
-                username: "adawong", 
-                password: "john", 
-                balance: 35000, 
-                imgUrl: "http://image.url.com", 
-                lat: "012321482", 
-                lang: "02131,43423"
-            }
-            const response = await request(app).post("/user/register").send(userDummy)
-            expect(response.status).toBe(400)
-        })
+    test('401 get orders without token', async function() {
+      await request(app)
+        .get('/driver/orders')
+        .then((response) => {
+          const { body, status } = response;
 
-        test("POST /register if password doesn't inputed", async () => {
-            const userDummy = {
-                username: "adawong", 
-                email: "adawong@mail.com",
-                balance: 35000, 
-                imgUrl: "http://image.url.com", 
-                lat: "012321482", 
-                lang: "02131,43423"
-            }
-            const response = await request(app).post("/user/register").send(userDummy)
-            expect(response.status).toBe(400)
+          expect(status).toBe(401);
+          expect(body).toHaveProperty('message', 'Invalid token');
+          done();
         })
-    })
+        .catch((error) => {
+          console.log(error)
+        });
+    });
+  });
 
-    // User melakukan login
-    describe("POST /user/login", () => {
-        test("Perform successful User login ", async () => {
-            const userDummy = {
-                email: "alex01@example.com",
-                password: "securepass123",
-            }
-            const response = await request(app).post("/user/login").send(userDummy)
-            expect(response.status).toBe(200)
-        })
+  describe('UPDATE /orders/:id', () => {
+    test('200 success update selected orders', async function() {
+      await request(app)
+        .patch(`/driver/orders/1`)
+        .set('access_token', validToken2)
+        .then((response) => {
+          const { body, status } = response;
 
-        test("POST /user/login if email and password doesn't match up", async () => {
-            const userDummy = {
-                email: "alex01@example.com",
-                password: "Hello world",
-            }
-            const response = await request(app).post("/user/login").send(userDummy)
-            expect(response.status).toBe(401)
+          expect(status).toBe(200);
+          expect(body).toHaveProperty('message', 'Order status has been updated!');
+          done();
         })
+        .catch((error) => {
+          console.log(error)
+        });
+    });
 
-        test("POST /user/login if email doesn't inputed", async () => {
-            const userDummy = {
-                password: "securepass123",
-            }
-            const response = await request(app).post("/user/login").send(userDummy)
-            expect(response.status).toBe(400)
-        })
+    test('403 update selected orders with unauthorized user', async function() {
+      await request(app)
+        .patch(`/driver/orders/1`)
+        .set('access_token', validToken2)
+        .then((response) => {
+          const { body, status } = response;
 
-        test("POST /user/login if password doesn't inputed", async () => {
-            const userDummy = {
-                email: "alex01@example.com",
-            }
-            const response = await request(app).post("/user/login").send(userDummy)
-            expect(response.status).toBe(400)
+          expect(status).toBe(403);
+          expect(body).toHaveProperty('message', 'You are not authorized');
+          done();
         })
+        .catch((error) => {
+          console.log(error)
+        });
+    });
 
-        test("POST /user/login if email doesn't registered in database", async () => {
-            const userDummy = {
-                email: "postal@example.com",
-                password: "postal",
-            }
-            const response = await request(app).post("/user/login").send(userDummy)
-            expect(response.status).toBe(404)
-        })
+    test('401 update selected orders with invalid token', async function() {
+      await request(app)
+        .patch(`/driver/orders/1`)
+        .set('access_token', invalidToken)
+        .then((response) => {
+          const { body, status } = response;
 
-        test("POST /user/login if something wrong with server (wrong input type)", async () => {
-            const userDummy = {
-                email: 231321,
-                password: 12312
-            }
-            const response = await request(app).post("/user/login").send(userDummy)
-            expect(response.status).toBe(500)
+          expect(status).toBe(401);
+          expect(body).toHaveProperty('message', 'Invalid token');
+          done();
         })
-    })
-})
+        .catch((error) => {
+          console.log(error)
+        });
+    });
+
+    test('401 update selected orders without token', async function() {
+      await request(app)
+        .patch(`/driver/orders/1`)
+        .then((response) => {
+          const { body, status } = response;
+
+          expect(status).toBe(401);
+          expect(body).toHaveProperty('message', 'Invalid token');
+          done();
+        })
+        .catch((error) => {
+          console.log(error)
+        });
+    });
+
+    test('404 update selected orders not found', async function() {
+      await request(app)
+        .patch(`/driver/orders/99`)
+        .set('access_token', validToken2)
+        .then((response) => {
+          const { body, status } = response;
+
+          expect(status).toBe(404);
+          expect(body).toHaveProperty('message', 'Hero not found');
+          done();
+        })
+        .catch((error) => {
+          console.log(error)
+        });
+    });
+  });
+});
