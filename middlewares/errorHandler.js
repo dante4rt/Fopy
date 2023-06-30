@@ -18,11 +18,30 @@ const errorHandler = (error, req, res, next) => {
   }
   else if (error.name === "Invalid token") {
     res.status(401).json({ message: "Invalid token" })
+  } else if (
+    error.name === 'SequelizeUniqueConstraintError' ||
+    error.name === 'SequelizeValidationError'
+  ) {
+    res.status(400).json({ message: error.errors[0].message });
+  } else if (error.name === 'EMAIL_REQUIRED') {
+    res.status(400).json({ message: 'Email is required' });
+  } else if (error.name === 'PASSWORD_REQUIRED') {
+    res.status(400).json({ message: 'Password is required' });
+  } else if (error.name === 'INVALID_DATA') {
+    res.status(401).json({ message: 'Invalid email or password' });
+  } else if (error.name === 'NOT_FOUND') {
+    res.status(404).json({ message: 'Entity not found!' });
+  } else if (error.name === 'INVALID_TOKEN') {
+    res.status(404).json({ message: 'Invalid token' });
+  } else if (error.name === 'FORBIDDEN') {
+    res.status(403).json({ message: 'You are not authorized' });
   }
   else {
-    res.status(500).json({ message: "Internal server error" })
+    res.status(500).json({ message: "Internal Server Error" })
   }
 
 }
 
-module.exports = errorHandler
+
+
+module.exports = errorHandler;

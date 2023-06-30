@@ -32,4 +32,29 @@ const authenticationAdmin = async (req, res, next) => {
   }
 }
 
-module.exports = authenticationAdmin 
+
+
+const authentication = async (req, res, next) => {
+  try {
+    const { access_token, role } = req.headers;
+
+    if (!access_token) throw { name: 'INVALID_TOKEN' };
+
+
+    const decode = verifyToken(access_token, SECRET);
+
+    const user = await Administrator.findByPk(decode.id);
+
+    if (!user) throw { name: 'INVALID_TOKEN' };
+
+
+    req.user = user;
+
+    next();
+  } catch (error) {
+    console.log(error);
+    next(error);
+  }
+};
+
+module.exports = { authentication, authenticationAdmin };

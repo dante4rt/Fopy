@@ -4,7 +4,7 @@
   "description": "Fopy is your printing solutions.",
   "main": "index.js",
   "scripts": {
-    "test": "jest --detectOpenHandles --forceExit --coverage"
+    "test": "jest --detectOpenHandles --forceExit --coverage --no-cache"
   },
   "keywords": [],
   "author": "",

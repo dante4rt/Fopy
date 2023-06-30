@@ -1,37 +1,18 @@
+const { Order } = require('../models');
 
-const { Service, Administrator } = require('../models/')
 const authorization = async (req, res, next) => {
-  const id = +req.params.id
   try {
-    const services = await Service.findByPk(id)
-    if (services === null) {
-      throw { name: "notFound" }
-    }
-    //?validasi kepemilikan services
-    console.log(req.user.id), "dari author";
-    if (req.user.role === 'admin' || req.user.id === services.authorId) {
-      next()
-    } else {
-      throw { name: "Forbidden" }
-    }
-  } catch (error) {
-    console.log(error);
-    next(error)
-  }
-}
-const authorizationForRole = async (req, res, next) => {
-  try {
-    if (req.user.role === 'admin') {
-      next()
-    } else {
-      {
-        throw { name: 'Forbidden' }
-      }
-    }
-  } catch (error) {
-    next(error)
-  }
+    const { id } = req.params;
+    const data = await Order.findByPk(id);
 
-}
-module.exports = { authorization, authorizationForRole }
+    if (!data) throw { name: 'NOT_FOUND' };
 
+    if (req.user.id !== data.authorId) throw { name: 'FORBIDDEN' };
+
+    next();
+  } catch (error) {
+    next(error);
+  }
+};
+
+module.exports = authorization;

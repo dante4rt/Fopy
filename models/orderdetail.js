@@ -11,12 +11,35 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      OrderDetail.belongsTo(models.Service)
+      OrderDetail.belongsTo(models.Order)
     }
   }
   OrderDetail.init({
-    ServiceId: DataTypes.INTEGER,
-    OrderId: DataTypes.INTEGER,
-    quantity: DataTypes.INTEGER,
+    ServiceId: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      validate: {
+        notEmpty: { msg: 'Service ID is required' },
+        notNull: { msg: 'Service ID is required' },
+      }
+    },
+    OrderId: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      validate: {
+        notEmpty: { msg: 'Order ID is required' },
+        notNull: { msg: 'Order ID is required' },
+      }
+    },
+    quantity: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      validate: {
+        notEmpty: { msg: 'Quantity is required' },
+        notNull: { msg: 'Quantity is required' },
+      }
+    },
     totalPage: DataTypes.INTEGER,
     url: DataTypes.STRING
   }, {

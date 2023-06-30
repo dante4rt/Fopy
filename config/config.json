@@ -1,8 +1,8 @@
 {
   "development": {
     "username": "postgres",
-    "password": "postgres",
-    "database": "FOPY",
+    "password": "1010",
+    "database": "FopyDB",
     "host": "127.0.0.1",
     "dialect": "postgres"
   },

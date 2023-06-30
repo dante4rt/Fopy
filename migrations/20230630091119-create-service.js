@@ -12,14 +12,20 @@ module.exports = {
       AdministratorId: {
         type: Sequelize.INTEGER,
         allowNull: false,
+        references: {
+          model: 'Administrators',
+          key: 'id'
+        },
+        onUpdate: 'cascade',
+        onDelete: 'cascade'
       },
       name: {
         type: Sequelize.STRING,
-        allowNull: false,
+        allowNull: false
       },
       price: {
         type: Sequelize.INTEGER,
-        allowNull: false,
+        allowNull: false
       },
       description: {
         type: Sequelize.STRING

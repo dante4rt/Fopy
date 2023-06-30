@@ -6,8 +6,8 @@
     "role": "admin",
     "balance": 5000,
     "status": "active",
-    "lat": "37.7749",
-    "lang": "-122.4194"
+    "location": "POINT(107.59278847659893 -6.942981263106864)",
+    "AdministratorId": 1
   },
   {
     "mitraName": "Jane Smith",
@@ -16,8 +16,8 @@
     "role": "mitra",
     "balance": 3000,
     "status": "active",
-    "lat": "40.7128",
-    "lang": "-74.0060"
+    "location": "POINT(107.59278847659893 -6.942981263106864)",
+    "AdministratorId": 1
   },
   {
     "mitraName": "Sam Smith",
@@ -26,8 +26,8 @@
     "role": "mitra",
     "balance": 3000,
     "status": "active",
-    "lat": "40.7128",
-    "lang": "-74.0060"
+    "location": "POINT(107.59278847659893 -6.942981263106864)",
+    "AdministratorId": 1
   },
   {
     "mitraName": "David Johnson",
@@ -36,7 +36,7 @@
     "role": "driver",
     "balance": 1000,
     "status": "active",
-    "lat": "51.5074",
-    "lang": "-0.1278"
+    "location": "POINT(107.59278847659893 -6.942981263106864)",
+    "AdministratorId": 1
   }
 ]

@@ -1,30 +1,23 @@
 [
-    {
-      "username": "alex01",
-      "email": "alex01@example.com",
-      "password": "securepass123",
-      "balance": 2500,
-      "imgUrl": "https://example.com/images/alex01.jpg",
-      "lat": "34.0522",
-      "lang": "-118.2437"
-    },
-    {
-      "username": "sara87",
-      "email": "sara87@example.com",
-      "password": "password789",
-      "balance": 5000,
-      "imgUrl": "https://example.com/images/sara87.jpg",
-      "lat": "39.9526",
-      "lang": "-75.1652"
-    },
-    {
-      "username": "mark23",
-      "email": "mark23@example.com",
-      "password": "pass1234",
-      "balance": 1500,
-      "imgUrl": "https://example.com/images/mark23.jpg",
-      "lat": "51.5074",
-      "lang": "-0.1278"
-    }
-  ]
-  
+  {
+    "username": "alex01",
+    "email": "alex01@example.com",
+    "password": "securepass123",
+    "balance": 2500,
+    "imgUrl": "https://example.com/images/alex01.jpg"
+  },
+  {
+    "username": "sara87",
+    "email": "sara87@example.com",
+    "password": "password789",
+    "balance": 5000,
+    "imgUrl": "https://example.com/images/sara87.jpg"
+  },
+  {
+    "username": "mark23",
+    "email": "mark23@example.com",
+    "password": "pass1234",
+    "balance": 1500,
+    "imgUrl": "https://example.com/images/mark23.jpg"
+  }
+]

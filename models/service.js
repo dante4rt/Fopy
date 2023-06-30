@@ -11,15 +11,45 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      Service.belongsTo(models.Administrator)
+      Service.hasMany(models.OrderDetail)
     }
   }
   Service.init({
-    AdministratorId: DataTypes.INTEGER,
-    name: DataTypes.STRING,
-    price: DataTypes.INTEGER,
+    AdministratorId: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      validate: {
+        notEmpty: { msg: 'Administrator ID is required' },
+        notNull: { msg: 'Administrator ID is required' },
+      }
+    },
+    name: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      validate: {
+        notEmpty: { msg: 'Service name is required' },
+        notNull: { msg: 'Service name is required' },
+      }
+    },
+    price: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      validate: {
+        notEmpty: { msg: 'Price is required' },
+        notNull: { msg: 'Price is required' },
+      }
+    },
     description: DataTypes.STRING,
     imgUrl: DataTypes.STRING,
-    type: DataTypes.STRING
+    type: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      validate: {
+        notEmpty: { msg: 'Type is required' },
+        notNull: { msg: 'Type is required' },
+      }
+    }
   }, {
     sequelize,
     modelName: 'Service',
