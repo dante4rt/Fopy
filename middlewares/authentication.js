@@ -36,10 +36,10 @@ const authentication = async (req, res, next) => {
   try {
     const { access_token, role } = req.headers;
 
+    console.log(access_token, `<<<<`);
     if (!access_token) throw { name: 'INVALID_TOKEN' };
 
-
-    const decode = verifyToken(access_token, SECRET);
+    const decode = verifyToken(access_token, process.env.SECRET);
 
     const user = await Administrator.findByPk(decode.id);
 
