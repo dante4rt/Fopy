@@ -1,6 +1,6 @@
 const { comparePassword } = require('../helpers/bcrypt');
 const { generateToken } = require('../helpers/jwt');
-const { Administrator } = require('../models');
+const { Administrator, Order } = require('../models');
 
 class driverController {
   static async login(req, res, next) {
@@ -24,11 +24,13 @@ class driverController {
         throw { name: 'INVALID_DATA' };
       }
 
+      
       const isValidPassword = comparePassword(password, driver.password);
 
       if (!isValidPassword) {
         throw { name: 'INVALID_DATA' };
       }
+
 
       const access_token = generateToken({
         id: driver.id,
@@ -50,6 +52,9 @@ class driverController {
   }
   static async fetchOrders(req, res, next) {
     try {
+      const orders = await Order.findAll()
+
+      res.json(orders)
     } catch (error) {
       console.log(error);
       next(error);

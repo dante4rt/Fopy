@@ -2,6 +2,8 @@
 const {
   Model
 } = require('sequelize');
+const { hashPassword } = require('../helpers/bcrypt');
+
 module.exports = (sequelize, DataTypes) => {
   class Administrator extends Model {
     /**
@@ -76,5 +78,8 @@ module.exports = (sequelize, DataTypes) => {
     sequelize,
     modelName: 'Administrator',
   });
+  Administrator.beforeCreate((data, options) => {
+    data.password = hashPassword(data.password)
+  })
   return Administrator;
 };

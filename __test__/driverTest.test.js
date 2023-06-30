@@ -3,24 +3,10 @@ const request = require('supertest');
 const { Administrator, Order } = require('../models');
 const jwt = require('jsonwebtoken');
 const app = require('../app');
+const { QueryInterface } = require('sequelize');
 const SECRET = 'Bismillah';
 
 let validToken, validToken2, invalidToken;
-const userTest1 = {
-  email: 'user.test1@mail.com',
-  password: 'usertest1',
-  role: 'driver',
-  //     balance: 5000,
-  //     status: 'active',
-};
-
-const userTest2 = {
-  email: 'user.test2@mail.com',
-  password: 'usertest2',
-  role: 'driver',
-  //   balance: 5000,
-  //   status: 'active',
-};
 
 beforeAll(async function () {
   try {
@@ -30,7 +16,33 @@ beforeAll(async function () {
       role: 'driver',
       balance: 5000,
       status: 'active',
-    });
+    })
+    .then((registeredUser) => {
+      validToken2 = jwt.sign({
+        id: registeredUser.id,
+        email: registeredUser.email,
+      }, SECRET)})
+
+    await QueryInterface.bulkInsert('Orders', [
+      {
+        AdministratorId: 1,
+        UserId: 1,
+        totalPrice: 15000,
+        orderItem: 'Print hitam/putih',
+        orderStatus: 'Queued',
+        orderDate: '2023-06-30 10:29:14.952 +0700',
+        InvoiceId: 'FOPY-12919129'
+      },
+      {
+        AdministratorId: 1,
+        UserId: 1,
+        totalPrice: 2000,
+        orderItem: 'Print berwarna',
+        orderStatus: 'Queued',
+        orderDate: '2023-06-30 10:29:14.952 +0700',
+        InvoiceId: 'FOPY-128382'
+      }
+    ]);
   } catch (error) {
     console.log(error);
   }
@@ -49,11 +61,8 @@ afterAll(async function () {
         restartIdentity: true,
       });
     })
-    .then((_) => {
-      done();
-    })
-    .catch((err) => {
-      console.log(err);
+    .catch((error) => {
+      console.log(error);
     });
 });
 
@@ -72,13 +81,12 @@ describe('Driver Test', () => {
 
       expect(typeof response.body.access_token).toEqual('string');
       expect(typeof response.body.email).toEqual('string');
-      ACCESS_TOKEN = response.body.access_token;
     });
 
     test('POST /login failed with wrong password', async function () {
       const response = await request(app)
-        .post('/public/login')
-        .send({ email: 'hacktiv8@mail.com', password: 'xxx' });
+        .post('/driver/login')
+        .send({ email: 'user.test1@mail.com', password: 'xxx' });
 
       expect(response.status).toEqual(401);
       expect(typeof response.body).toEqual('object');
@@ -90,7 +98,7 @@ describe('Driver Test', () => {
 
     test('POST /login failed with email that is not on the database', async function () {
       const response = await request(app)
-        .post('/public/login')
+        .post('/driver/login')
         .send({ email: 'hacktiv8@mail.comx', password: '12345' });
 
       expect(response.status).toEqual(401);
@@ -103,9 +111,9 @@ describe('Driver Test', () => {
   });
 
   describe('GET /orders', () => {
-    test('200 success get orders', (done) => {
-      request(app)
-        .get('/heroes')
+    test('200 success get orders', async function() {
+      await request(app)
+        .get('/driver/orders')
         .set('access_token', validToken)
         .then((response) => {
           const { body, status } = response;
@@ -115,14 +123,14 @@ describe('Driver Test', () => {
           expect(body.length).toBeGreaterThan(0);
           done();
         })
-        .catch((err) => {
-          done(err);
+        .catch((error) => {
+          console.log(error);
         });
     });
 
-    test('401 get orders with invalid token', (done) => {
-      request(app)
-        .get('/heroes')
+    test('401 get orders with invalid token', async function() {
+      await request(app)
+        .get('/driver/orders')
         .set('access_token', invalidToken)
         .then((response) => {
           const { body, status } = response;
@@ -131,14 +139,14 @@ describe('Driver Test', () => {
           expect(body).toHaveProperty('message', 'Invalid token');
           done();
         })
-        .catch((err) => {
-          done(err);
+        .catch((error) => {
+          console.log(error);
         });
     });
 
-    test('401 get orders without token', (done) => {
-      request(app)
-        .get('/heroes')
+    test.only('401 get orders without token', async function() {
+      await request(app)
+        .get('/driver/orders')
         .then((response) => {
           const { body, status } = response;
 
@@ -146,15 +154,15 @@ describe('Driver Test', () => {
           expect(body).toHaveProperty('message', 'Invalid token');
           done();
         })
-        .catch((err) => {
-          done(err);
+        .catch((error) => {
+          console.log(error)
         });
     });
   });
 
   describe('UPDATE /orders/:id', () => {
-    test('200 success update selected orders', (done) => {
-      request(app)
+    test('200 success update selected orders', async function() {
+      await request(app)
         .patch(`/myheroes/${idMyHero}`)
         .set('access_token', validToken)
         .then((response) => {
@@ -164,13 +172,13 @@ describe('Driver Test', () => {
           expect(body).toHaveProperty('message', 'Hero has been played');
           done();
         })
-        .catch((err) => {
-          done(err);
+        .catch((error) => {
+          console.log(error)
         });
     });
 
-    test('403 update selected orders with unauthorized user', (done) => {
-      request(app)
+    test('403 update selected orders with unauthorized user', async function() {
+      await request(app)
         .patch(`/myheroes/${idMyHero}`)
         .set('access_token', validToken2)
         .then((response) => {
@@ -180,13 +188,13 @@ describe('Driver Test', () => {
           expect(body).toHaveProperty('message', 'You are not authorized');
           done();
         })
-        .catch((err) => {
-          done(err);
+        .catch((error) => {
+          console.log(error)
         });
     });
 
-    test('401 update selected orders with invalid token', (done) => {
-      request(app)
+    test('401 update selected orders with invalid token', async function() {
+      await request(app)
         .patch(`/myheroes/${idMyHero}`)
         .set('access_token', invalidToken)
         .then((response) => {
@@ -196,13 +204,13 @@ describe('Driver Test', () => {
           expect(body).toHaveProperty('message', 'Invalid token');
           done();
         })
-        .catch((err) => {
-          done(err);
+        .catch((error) => {
+          console.log(error)
         });
     });
 
-    test('401 update selected orders without token', (done) => {
-      request(app)
+    test('401 update selected orders without token', async function() {
+      await request(app)
         .patch(`/myheroes/${idMyHero}`)
         .then((response) => {
           const { body, status } = response;
@@ -211,13 +219,13 @@ describe('Driver Test', () => {
           expect(body).toHaveProperty('message', 'Invalid token');
           done();
         })
-        .catch((err) => {
-          done(err);
+        .catch((error) => {
+          console.log(error)
         });
     });
 
-    test('404 update selected orders not found', (done) => {
-      request(app)
+    test('404 update selected orders not found', async function() {
+      await request(app)
         .patch(`/myheroes/99`)
         .set('access_token', validToken)
         .then((response) => {
@@ -227,8 +235,8 @@ describe('Driver Test', () => {
           expect(body).toHaveProperty('message', 'Hero not found');
           done();
         })
-        .catch((err) => {
-          done(err);
+        .catch((error) => {
+          console.log(error)
         });
     });
   });

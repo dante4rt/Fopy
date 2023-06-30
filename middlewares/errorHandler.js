@@ -9,7 +9,7 @@ const errorHandler = (err, req, res, next) => {
   } else if (err.name === 'PASSWORD_REQUIRED') {
     res.status(400).json({ message: 'Password is required' });
   } else if (err.name === 'INVALID_DATA') {
-    res.status(401).json({ message: 'Invalid email/password' });
+    res.status(401).json({ message: 'Invalid email or password' });
   } else if (err.name === 'NOT_FOUND') {
     res.status(404).json({ message: 'Entity not found!' });
   } else if (err.name === 'INVALID_TOKEN') {
