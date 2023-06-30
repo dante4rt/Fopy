@@ -14,9 +14,6 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
       Administrator.hasMany(models.Order)
       Administrator.hasMany(models.Service)
-      Administrator.belongsToMany(models.OrderDetail, {
-        through: models.Order
-      })
     }
   }
   Administrator.init({
