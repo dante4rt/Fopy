@@ -1,6 +1,38 @@
-const { validateToken } = require('../helpers/jwt');
-const { Administrator } = require('../models');
-const SECRET = process.env.SECRET;
+const { signToken, verifyToken } = require('../helpers/jwt')
+const { Administrator } = require('../models')
+
+const authenticationAdmin = async (req, res, next) => {
+  try {
+    const { access_token } = req.headers
+    if (!access_token) {
+      {
+        throw { name: 'Invalid token' }
+      }
+    }
+    else {
+      const codeToken = verifyToken(access_token)
+      const checkAdminInDatabase = await Administrator.findOne({
+        where: {
+          email: codeToken.email
+        }
+      })
+      if (!checkAdminInDatabase) {
+        {
+          throw { name: "Invalid token" }
+        }
+      }
+      else {
+        req.admin = checkAdminInDatabase
+        next()
+      }
+    }
+  } catch (error) {
+    console.log(error)
+    next(error)
+  }
+}
+
+
 
 const authentication = async (req, res, next) => {
   try {
@@ -8,14 +40,13 @@ const authentication = async (req, res, next) => {
 
     if (!access_token) throw { name: 'INVALID_TOKEN' };
 
-    // if (role !== 'admin') throw { name: 'INVALID_TOKEN' }
 
-    const decode = validateToken(access_token, SECRET);
+    const decode = verifyToken(access_token, SECRET);
 
     const user = await Administrator.findByPk(decode.id);
 
     if (!user) throw { name: 'INVALID_TOKEN' };
-    // if (user.role !== 'admin') throw { name: 'INVALID_TOKEN' };
+
 
     req.user = user;
 
@@ -26,4 +57,4 @@ const authentication = async (req, res, next) => {
   }
 };
 
-module.exports = authentication;
+module.exports = { authentication, authenticationAdmin };
