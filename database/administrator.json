@@ -5,9 +5,7 @@
       "password": "password123",
       "role": "admin",
       "balance": 5000,
-      "status": "active",
-      "lat": "37.7749",
-      "lang": "-122.4194"
+      "status": "active"
     },
     {
       "mitraName": "Jane Smith",
@@ -15,9 +13,7 @@
       "password": "password456",
       "role": "mitra",
       "balance": 3000,
-      "status": "active",
-      "lat": "40.7128",
-      "lang": "-74.0060"
+      "status": "active"
     },
     {
       "mitraName": "David Johnson",
@@ -25,9 +21,7 @@
       "password": "password789",
       "role": "driver",
       "balance": 1000,
-      "status": "active",
-      "lat": "51.5074",
-      "lang": "-0.1278"
+      "status": "active"
     }
   ]
   

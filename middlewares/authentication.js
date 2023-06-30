@@ -1,6 +1,5 @@
 const { validateToken } = require('../helpers/jwt');
 const { Administrator } = require('../models');
-const SECRET = process.env.SECRET;
 
 const authentication = async (req, res, next) => {
   try {
@@ -10,7 +9,7 @@ const authentication = async (req, res, next) => {
 
     // if (role !== 'admin') throw { name: 'INVALID_TOKEN' }
 
-    const decode = validateToken(access_token, SECRET);
+    const decode = validateToken(access_token);
 
     const user = await Administrator.findByPk(decode.id);
 
