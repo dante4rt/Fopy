@@ -1,0 +1,26 @@
+[
+    {
+      "AdministratorId": 1,
+      "name": "Color Printing",
+      "price": 10.99,
+      "description": "High-quality color printing service for documents and images",
+      "imgUrl": "https://example.com/images/color_printing.jpg",
+      "type": "Jasa"
+    },
+    {
+      "AdministratorId": 1,
+      "name": "Black & White Printing",
+      "price": 5.99,
+      "description": "Affordable black and white printing service for documents",
+      "imgUrl": "https://example.com/images/bw_printing.jpg",
+      "type": "Jasa"
+    },
+    {
+      "AdministratorId": 1,
+      "name": "Document Scanning",
+      "price": 3.99,
+      "description": "Professional document scanning service to digitize your files",
+      "imgUrl": "https://example.com/images/document_scanning.jpg",
+      "type": "Jasa"
+    }
+]
