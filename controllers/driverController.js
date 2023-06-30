@@ -53,7 +53,7 @@ class driverController {
   static async fetchOrders(req, res, next) {
     try {
       const orders = await Order.findAll()
-
+      
       res.json(orders)
     } catch (error) {
       console.log(error);
@@ -62,6 +62,17 @@ class driverController {
   }
   static async updateStatus(req, res, next) {
     try {
+      const { id } = req.params;
+      const { status } = req.body;
+      const user = req.user.id
+
+      await Order.update({ status, AdministratorId: user }, {
+          where: {
+              id
+          }
+      })
+
+      res.status(200).json({ message: 'Order status has been updated!'  })
     } catch (error) {
       console.log(error);
       next(error);

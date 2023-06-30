@@ -2,7 +2,7 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('OrderServices', {
+    await queryInterface.createTable('OrderDetails', {
       id: {
         allowNull: false,
         autoIncrement: true,
@@ -19,19 +19,15 @@ module.exports = {
         onUpdate: 'cascade',
         onDelete: 'cascade'
       },
-      UserId: {
+      OrderId: {
         type: Sequelize.INTEGER,
         allowNull: false,
         references: {
-          model: 'Users',
+          model: 'Orders',
           key: 'id'
         },
         onUpdate: 'cascade',
         onDelete: 'cascade'
-      },
-      name: {
-        type: Sequelize.STRING,
-        allowNull: false
       },
       quantity: {
         type: Sequelize.INTEGER,
@@ -42,13 +38,6 @@ module.exports = {
       },
       url: {
         type: Sequelize.STRING
-      },
-      OrderServiceId: {
-        type: Sequelize.INTEGER
-      },
-      deliveryMethod: {
-        type: Sequelize.STRING,
-        allowNull: false
       },
       createdAt: {
         allowNull: false,
@@ -61,6 +50,6 @@ module.exports = {
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('OrderServices');
+    await queryInterface.dropTable('OrderDetails');
   }
 };

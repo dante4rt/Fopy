@@ -14,8 +14,8 @@ module.exports = {
       },
       email: {
         type: Sequelize.STRING,
-        allowNull: false,
-        unique: true
+        unique: true,
+        allowNull: false
       },
       password: {
         type: Sequelize.STRING,
@@ -32,14 +32,13 @@ module.exports = {
       },
       status: {
         type: Sequelize.STRING,
-        allowNull: false,
-        defaultValue: true
+        allowNull: false
       },
-      lat: {
-        type: Sequelize.STRING
+      location: {
+        type: Sequelize.GEOMETRY('POINT')
       },
-      lang: {
-        type: Sequelize.STRING
+      AdministratorId: {
+        type: Sequelize.INTEGER
       },
       createdAt: {
         allowNull: false,

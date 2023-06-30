@@ -15,7 +15,7 @@ const authentication = async (req, res, next) => {
     const user = await Administrator.findByPk(decode.id);
 
     if (!user) throw { name: 'INVALID_TOKEN' };
-    if (user.role !== 'admin') throw { name: 'INVALID_TOKEN' };
+    // if (user.role !== 'admin') throw { name: 'INVALID_TOKEN' };
 
     req.user = user;
 

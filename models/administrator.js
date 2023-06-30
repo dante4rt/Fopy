@@ -3,7 +3,6 @@ const {
   Model
 } = require('sequelize');
 const { hashPassword } = require('../helpers/bcrypt');
-
 module.exports = (sequelize, DataTypes) => {
   class Administrator extends Model {
     /**
@@ -15,7 +14,7 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
       Administrator.hasMany(models.Order)
       Administrator.hasMany(models.Service)
-      Administrator.belongsToMany(models.User, {
+      Administrator.belongsToMany(models.OrderDetail, {
         through: models.Order
       })
     }
@@ -66,14 +65,13 @@ module.exports = (sequelize, DataTypes) => {
     status: {
       type: DataTypes.STRING,
       allowNull: false,
-      defaultValue: true,
       validate: {
         notEmpty: { msg: 'Status is required' },
         notNull: { msg: 'Status is required' },
       }
     },
-    lat: DataTypes.STRING,
-    lang: DataTypes.STRING
+    location: DataTypes.GEOMETRY,
+    AdministratorId: DataTypes.INTEGER
   }, {
     sequelize,
     modelName: 'Administrator',

@@ -11,8 +11,9 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      Order.belongsTo(models.Administrator)
+      Order.hasMany(models.OrderDetail)
       Order.belongsTo(models.User)
+      Order.belongsTo(models.Administrator)
     }
   }
   Order.init({
@@ -40,14 +41,6 @@ module.exports = (sequelize, DataTypes) => {
         notNull: { msg: 'Total price is required' },
       }
     },
-    orderItem: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      validate: {
-        notEmpty: { msg: 'Order item is required' },
-        notNull: { msg: 'Order item is required' },
-      }
-    },
     orderStatus: {
       type: DataTypes.STRING,
       allowNull: false,
@@ -64,12 +57,20 @@ module.exports = (sequelize, DataTypes) => {
         notNull: { msg: 'Order date is required' },
       }
     },
-    InvoiceId: {
+    location: {
+      type: DataTypes.GEOMETRY,
+      allowNull: false,
+      validate: {
+        notEmpty: { msg: 'Location is required' },
+        notNull: { msg: 'Location is required' },
+      }
+    },
+    deliveryMethod: {
       type: DataTypes.STRING,
       allowNull: false,
       validate: {
-        notEmpty: { msg: 'Invoice ID is required' },
-        notNull: { msg: 'Invoice ID is required' },
+        notEmpty: { msg: 'Delivery method is required' },
+        notNull: { msg: 'Delivery method is required' },
       }
     }
   }, {

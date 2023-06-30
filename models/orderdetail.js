@@ -3,7 +3,7 @@ const {
   Model
 } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
-  class OrderService extends Model {
+  class OrderDetail extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
@@ -11,11 +11,11 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      OrderService.belongsTo(models.User, { foreignKey: 'UserId' })
-      OrderService.belongsTo(models.Service)
+      OrderDetail.belongsTo(models.Service)
+      OrderDetail.belongsTo(models.Order)
     }
   }
-  OrderService.init({
+  OrderDetail.init({
     ServiceId: {
       type: DataTypes.INTEGER,
       allowNull: false,
@@ -24,21 +24,12 @@ module.exports = (sequelize, DataTypes) => {
         notNull: { msg: 'Service ID is required' },
       }
     },
-    OrderServiceID: DataTypes.INTEGER,
-    UserId: {
+    OrderId: {
       type: DataTypes.INTEGER,
       allowNull: false,
       validate: {
-        notEmpty: { msg: 'User ID is required' },
-        notNull: { msg: 'User ID is required' },
-      }
-    },
-    name: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      validate: {
-        notEmpty: { msg: 'Order service name is required' },
-        notNull: { msg: 'Order service name is required' },
+        notEmpty: { msg: 'Order ID is required' },
+        notNull: { msg: 'Order ID is required' },
       }
     },
     quantity: {
@@ -50,18 +41,10 @@ module.exports = (sequelize, DataTypes) => {
       }
     },
     totalPage: DataTypes.INTEGER,
-    url: DataTypes.STRING,
-    deliveryMethod: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      validate: {
-        notEmpty: { msg: 'Delivery method is required' },
-        notNull: { msg: 'Delivery method is required' },
-      }
-    }
+    url: DataTypes.STRING
   }, {
     sequelize,
-    modelName: 'OrderService',
+    modelName: 'OrderDetail',
   });
-  return OrderService;
+  return OrderDetail;
 };

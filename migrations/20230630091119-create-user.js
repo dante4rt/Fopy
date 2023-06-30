@@ -14,7 +14,8 @@ module.exports = {
       },
       email: {
         type: Sequelize.STRING,
-        allowNull: false
+        allowNull: false,
+        unique: true
       },
       password: {
         type: Sequelize.STRING,
@@ -22,16 +23,9 @@ module.exports = {
       },
       balance: {
         type: Sequelize.INTEGER,
-        allowNull: false,
-        defaultValue: 0
+        allowNull: false
       },
       imgUrl: {
-        type: Sequelize.STRING
-      },
-      lat: {
-        type: Sequelize.STRING
-      },
-      lang: {
         type: Sequelize.STRING
       },
       createdAt: {

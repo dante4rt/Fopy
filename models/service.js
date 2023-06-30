@@ -12,7 +12,7 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       // define association here
       Service.belongsTo(models.Administrator)
-      Service.hasMany(models.OrderService)
+      Service.hasMany(models.OrderDetail)
     }
   }
   Service.init({
@@ -41,7 +41,15 @@ module.exports = (sequelize, DataTypes) => {
       }
     },
     description: DataTypes.STRING,
-    imgUrl: DataTypes.STRING
+    imgUrl: DataTypes.STRING,
+    type: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      validate: {
+        notEmpty: { msg: 'Type is required' },
+        notNull: { msg: 'Type is required' },
+      }
+    }
   }, {
     sequelize,
     modelName: 'Service',

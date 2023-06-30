@@ -2,7 +2,7 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('Services', {
+    await queryInterface.createTable('Orders', {
       id: {
         allowNull: false,
         autoIncrement: true,
@@ -19,19 +19,35 @@ module.exports = {
         onUpdate: 'cascade',
         onDelete: 'cascade'
       },
-      name: {
-        type: Sequelize.STRING,
-        allowNull: false
+      UserId: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        references: {
+          model: 'Users',
+          key: 'id'
+        },
+        onUpdate: 'cascade',
+        onDelete: 'cascade'
       },
-      price: {
+      totalPrice: {
         type: Sequelize.INTEGER,
         allowNull: false
       },
-      description: {
-        type: Sequelize.STRING
+      orderStatus: {
+        type: Sequelize.STRING,
+        allowNull: false
       },
-      imgUrl: {
-        type: Sequelize.STRING
+      orderDate: {
+        type: Sequelize.DATE,
+        allowNull: false
+      },
+      location: {
+        type: Sequelize.GEOMETRY('POINT'),
+        allowNull: false
+      },
+      deliveryMethod: {
+        type: Sequelize.STRING,
+        allowNull: false
       },
       createdAt: {
         allowNull: false,
@@ -44,6 +60,6 @@ module.exports = {
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('Services');
+    await queryInterface.dropTable('Orders');
   }
 };
