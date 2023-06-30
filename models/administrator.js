@@ -68,6 +68,7 @@ module.exports = (sequelize, DataTypes) => {
       }
     },
     location: DataTypes.GEOMETRY,
+    
     AdministratorId: DataTypes.INTEGER
   }, {
     sequelize,
