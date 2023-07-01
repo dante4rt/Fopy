@@ -1,8 +1,8 @@
 # Fopy
-Fopy is your printing solutions.
+Say hello to effortless printing, streamlined communication, and unmatched convenience with only one app Fopy!
 
 Members :
-* Muhammad Ramadhani (Idea, C)
+* Muhammad Ramadhani
 * Adel Aulia
 * Calvin James Jhonathan
 * Derrick Kennedy
