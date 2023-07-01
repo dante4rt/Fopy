@@ -1,5 +1,5 @@
 const { comparePassword } = require('../helpers/bcrypt');
-const { generateToken } = require('../helpers/jwt');
+const { generateToken, signToken } = require('../helpers/jwt');
 const { Administrator, Order } = require('../models');
 
 class driverController {
@@ -32,7 +32,7 @@ class driverController {
       }
 
 
-      const access_token = generateToken({
+      const access_token = signToken({
         id: driver.id,
         email: driver.email,
         // username: driver.username,

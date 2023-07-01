@@ -33,8 +33,6 @@ class userController {
                 imgUrl
             })
 
-            console.log(newUser, "<<<<<< ini newUser")
-
             res.status(201).json({message: `User with username ${newUser.username} has been created`})
         } catch (error) {
             res.status(500).json({message: "Internal Server Error"})
