@@ -5,7 +5,7 @@
       "name": "Fotocopy HVS A4/F4",
       "price": 500,
       "description": "Fotokopi dengan ukuran kertas A4 ataupun F4. Harga per lembar",
-      "imgUrl": "image-url",
+      "imgUrl": "http://www.librairie-traitdunion.com/templates/yootheme/cache/photocopieur-b2a0999c.jpeg",
       "type": "service"
     },
     {
@@ -13,15 +13,7 @@
       "name": "Laminating / Laminasi Dokumen",
       "price": 4000,
       "description": "Jasa laminating sesuai deskripsi",
-      "imgUrl": "image-url",
-      "type": "service"
-    },
-    {
-      "AdministratorId": 1,
-      "name": "Print Hitam Putih A4",
-      "price": 1000,
-      "description": "Jasa print hitam putih",
-      "imgUrl": "image-url",
+      "imgUrl": "https://2.bp.blogspot.com/-wNaD6ivMMc4/WhxKE--GGGI/AAAAAAAAA1o/XHP8uLLct_k5HZznGfkm5uGuVCs0kHdtQCLcBGAs/s1600/IMG_20170721_204816.jpg",
       "type": "service"
     },
     {
@@ -29,15 +21,15 @@
       "name": "Print Warna",
       "price": 1500,
       "description": "Harga tertera adalah untuk 1 sisi jika print 2 sisi (Bolak Balik) dihitung 2x",
-      "imgUrl": "image-url",
+      "imgUrl": "https://1.bp.blogspot.com/-aO-q12c5kAg/VWaLGWGhtuI/AAAAAAAAALs/KG_GrFL07nU/s1600/prin.jpg",
       "type": "service"
     },
     {
       "AdministratorId": 1,
-      "name": "Print Hitam Putih A3",
+      "name": "Print Hitam Putih",
       "price": 2500,
       "description": "Bahan Kertas HVS A3 75 GSM",
-      "imgUrl": "image-url",
+      "imgUrl": "https://4.bp.blogspot.com/-OnxHMbojq9c/Vnu5Ix2JVHI/AAAAAAAAC6U/RX5f6iasa50/s1600/IMG_20151224_162015.jpg",
       "type": "service"
     },
     {
@@ -45,7 +37,7 @@
       "name": "Print Sertifikat / Piagam",
       "price": 20000,
       "description": "Menggunakan Kertas Concorde 220 gsm dan 90gsm Ukuran A4",
-      "imgUrl": "image-url",
+      "imgUrl": "https://www.percetakanmakassar.co.id/wp-content/uploads/2021/01/WhatsApp-Image-2020-01-11-at-17.00.21.jpeg",
       "type": "service"
     },
     {
@@ -53,7 +45,7 @@
       "name": "Scan Dokumen A3",
       "price": 3000,
       "description": "Jasa scan dokumen ukuran A3, dengan menggunakan mesin fuji xerok jadi bisa cepat dan tajam",
-      "imgUrl": "image-url",
+      "imgUrl": "https://www.recordnations.com/wp-content/uploads/2014/10/bigstock-Woman-scan-documents-at-work-65845051.jpg",
       "type": "service"
     },
     {
@@ -61,7 +53,7 @@
       "name": "Scan Dokumen A4",
       "price": 2000,
       "description": "Jasa scan dokumen untuk merapikan file menjadi pdf atau jpg",
-      "imgUrl": "image-url",
+      "imgUrl": "https://blog.qelola.com/wp-content/uploads/2020/07/cara-scan.jpg",
       "type": "service"
     },
     {
@@ -69,7 +61,7 @@
       "name": "Jilid Hard Cover",
       "price": 21000,
       "description": "Include Isi sama Cover, Sudah jadi buku",
-      "imgUrl": "image-url",
+      "imgUrl": "https://s3.bukalapak.com/img/3654449852/w-1000/P_20180428_152516_HDR_1_scaled.jpg",
       "type": "service"
     },
     {
@@ -77,7 +69,7 @@
       "name": "Jilid Spiral",
       "price": 15000,
       "description": "Harga per dokumen",
-      "imgUrl": "image-url",
+      "imgUrl": "https://jasaprint.files.wordpress.com/2014/07/jasa-jilid-buku.jpg",
       "type": "service"
     },
     {
@@ -85,7 +77,7 @@
       "name": "Cetak Buku",
       "price": 40000,
       "description": "Sampul ape, kertas hvs",
-      "imgUrl": "xxx",
+      "imgUrl": "https://3.bp.blogspot.com/-fIgkdS3xNCY/W5CrvGjfs9I/AAAAAAAAAcA/mnEsUq9zHsEvTcAC9AaGfBm0UPUG3PhpQCPcBGAYYCw/s1600/Cetak%2BBooklet%2BJakarta%2BTimur.jpg",
       "type": "service"
     },
     {
@@ -93,7 +85,7 @@
       "name": "Sticky Notes",
       "price": 5000,
       "description": "Paket sticky notes dengan berbagai warna",
-      "imgUrl": "image-url",
+      "imgUrl": "https://cdn.arteza.com/products/20/05/sticky-notes-100-sheets-pack-of-48_4CX7yg68_990x990.jpg",
       "type": "product"
     },
     {
@@ -101,7 +93,7 @@
       "name": "Pensil Mekanik",
       "price": 10000,
       "description": "Pensil mekanik dengan ujung 0,7mm",
-      "imgUrl": "image-url",
+      "imgUrl": "https://static.bmdstatic.com/gk/production/e8fc06d856f0a89db54b23a361fc667c.JPG",
       "type": "product"
     },
     {
@@ -109,7 +101,7 @@
       "name": "Set Highlighter",
       "price": 15000,
       "description": "Set highlighter dengan 4 warna berbeda",
-      "imgUrl": "image-url",
+      "imgUrl": "https://business99.net/wp-content/uploads/2018/12/https-images-na-ssl-images-amazon-com-images-i-6-1.jpeg",
       "type": "product"
     },
     {
@@ -117,7 +109,7 @@
       "name": "Bolpoin",
       "price": 8000,
       "description": "Paket 5 bolpoin hitam",
-      "imgUrl": "image-url",
+      "imgUrl": "https://doransouvenir.com/wp-content/uploads/2020/04/Bolpoin-Pen-BP-309.jpg",
       "type": "product"
     },
     {
@@ -125,7 +117,7 @@
       "name": "Buku Catatan",
       "price": 20000,
       "description": "Buku catatan ukuran A5 dengan halaman bergaris",
-      "imgUrl": "image-url",
+      "imgUrl": "https://www.jakartanotebook.com/upload/images/Buku%20Catatan%20Hard%20Cover%201.jpg",
       "type": "product"
     },
     {
@@ -133,7 +125,7 @@
       "name": "Klip Kertas",
       "price": 7000,
       "description": "Paket klip kertas dengan ukuran berbeda",
-      "imgUrl": "image-url",
+      "imgUrl": "https://s3.bukalapak.com/img/3872975882/w-1000/Klip_Kertas_Warna___Penjepit_Kertas_Joyko___Paper_Clips_Warn.jpg",
       "type": "product"
     },
     {
@@ -141,7 +133,7 @@
       "name": "Pita Koreksi",
       "price": 12000,
       "description": "Pita koreksi putih untuk koreksi yang rapi",
-      "imgUrl": "image-url",
+      "imgUrl": "https://www.joyko.co.id/image/cache/data/additional/CT-553-BEAUTY-3-01-900x900.jpg",
       "type": "product"
     },
     {
@@ -149,7 +141,7 @@
       "name": "Set Penghapus",
       "price": 6000,
       "description": "Set penghapus dengan 3 bentuk dan ukuran yang berbeda",
-      "imgUrl": "image-url",
+      "imgUrl": "https://s2.bukalapak.com/img/7716357083/w-1000/Penghapus_mini_murah_hapusan_pensil_karet_eraser.jpg",
       "type": "product"
     },
     {
@@ -157,7 +149,7 @@
       "name": "Klip Kertas",
       "price": 3000,
       "description": "Paket klip kertas berukuran kecil",
-      "imgUrl": "image-url",
+      "imgUrl": "https://s2.bukalapak.com/img/2188758551/w-1000/trigonal_clips_joyko_no_1_clip_paper_klip_kertas_penjepit_se.jpg",
       "type": "product"
     },
     {
@@ -165,7 +157,7 @@
       "name": "Tab Indeks",
       "price": 9000,
       "description": "Set tab indeks untuk mengorganisir dokumen",
-      "imgUrl": "image-url",
+      "imgUrl": "https://cdnimg.webstaurantstore.com/images/products/xxl/235704/1588464.jpg",
       "type": "product"
     }
   ]
