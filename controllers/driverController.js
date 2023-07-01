@@ -52,6 +52,7 @@ class driverController {
   }
   static async fetchOrders(req, res, next) {
     try {
+      // where status = pending
       const orders = await Order.findAll()
 
       res.json(orders)
