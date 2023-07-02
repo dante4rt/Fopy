@@ -7,7 +7,7 @@
     "balance": 5000,
     "status": "active",
     "location": "POINT(107.59278847659893 -6.942981263106864)",
-    "AdministratorId": 1
+    "AdministratorId": null
   },
   {
     "mitraName": "Jane Smith",
@@ -17,7 +17,7 @@
     "balance": 3000,
     "status": "active",
     "location": "POINT(107.59278847659893 -6.942981263106864)",
-    "AdministratorId": 1
+    "AdministratorId": 2
   },
   {
     "mitraName": "Sam Smith",
@@ -27,7 +27,7 @@
     "balance": 3000,
     "status": "active",
     "location": "POINT(107.59278847659893 -6.942981263106864)",
-    "AdministratorId": 1
+    "AdministratorId": 3
   },
   {
     "mitraName": "David Johnson",
@@ -37,6 +37,6 @@
     "balance": 1000,
     "status": "active",
     "location": "POINT(107.59278847659893 -6.942981263106864)",
-    "AdministratorId": 1
+    "AdministratorId": 4
   }
 ]

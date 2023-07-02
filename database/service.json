@@ -1,6 +1,6 @@
 [
   {
-    "AdministratorId": 1,
+    "AdministratorId": 2,
     "name": "Color Printing",
     "price": 10000,
     "description": "High-quality color printing service for documents and images",
@@ -8,7 +8,7 @@
     "type": "service"
   },
   {
-    "AdministratorId": 1,
+    "AdministratorId": 2,
     "name": "Black & White Printing",
     "price": 5999,
     "description": "Affordable black and white printing service for documents",
@@ -16,7 +16,7 @@
     "type": "service"
   },
   {
-    "AdministratorId": 1,
+    "AdministratorId": 2,
     "name": "Document Scanning",
     "price": 33339,
     "description": "Professional document scanning service to digitize your files",
@@ -24,7 +24,7 @@
     "type": "service"
   },
   {
-    "AdministratorId": 1,
+    "AdministratorId": 2,
     "name": "Eraser",
     "price": 333399,
     "description": "Professional document scanning service to digitize your files",
