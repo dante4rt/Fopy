@@ -33,7 +33,7 @@ describe('register Account Administrator', function () {
       lat: "37.7749",
       lang: "-122.4194"
     })
-    // console.log(response.body, "<<<body");
+    
     expect(response.status).toEqual(201)
     expect((response) => {
       expect(response.body).toHaveProperty('id', expect.any(Number))

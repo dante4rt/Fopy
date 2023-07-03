@@ -1,5 +1,5 @@
 const { comparePassword } = require('../helpers/bcrypt');
-const { generateToken } = require('../helpers/jwt');
+const { generateToken, signToken } = require('../helpers/jwt');
 const { Administrator, Order } = require('../models');
 
 class driverController {
@@ -32,7 +32,7 @@ class driverController {
       }
 
 
-      const access_token = generateToken({
+      const access_token = signToken({
         id: driver.id,
         email: driver.email,
         // username: driver.username,
@@ -52,6 +52,7 @@ class driverController {
   }
   static async fetchOrders(req, res, next) {
     try {
+      // where status = pending
       const orders = await Order.findAll()
 
       res.json(orders)
@@ -66,10 +67,14 @@ class driverController {
       const { status } = req.body;
       const user = req.user.id
 
-      await Order.update({ status, AdministratorId: user }, {
-        where: {
-          id
-        }
+      const order = await Order.findByPk(id)
+
+      if (!order) throw { name: 'NOT_FOUND' }
+      
+      await Order.update({ orderStatus: status, AdministratorId: user }, {
+          where: {
+              id
+          }
       })
 
       res.status(200).json({ message: 'Order status has been updated!' })

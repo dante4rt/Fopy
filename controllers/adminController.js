@@ -16,7 +16,6 @@ module.exports = class AdminController {
           email
         }
       })
-      console.log(findEmail, "<<<<<")
       if (!findEmail) throw { name: "Invalid email/password" }
       let comparingPassword = comparePassword(password, findEmail.password)
       if (!comparingPassword) throw { name: "Invalid email/password" }
@@ -33,16 +32,14 @@ module.exports = class AdminController {
         AdministratorId: findEmail.AdministratorId
       })
     } catch (error) {
-      console.log(error, "<<<<errrorr dari sini")
+      console.log(error)
       next(error)
     }
   }
 
   static async registerMitra(req, res, next) {
     try {
-      let { mitraName, email, password, balance, status, location } = req.body
-      location = JSON.parse("[" + location + "]");
-      // console.log(location, `<<<<`);
+      const { mitraName, email, password, role, balance, status, lat, lang } = req.body
       const createNewMitra = await Administrator.create({
         mitraName,
         email,
