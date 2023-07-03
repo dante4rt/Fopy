@@ -27,8 +27,9 @@ module.exports = class AdminController {
         access_token,
         id: findEmail.id,
         email: findEmail.email,
-        username: findEmail.username,
-        role: findEmail.role
+        mitraName: findEmail.mitraName,
+        role: findEmail.role,
+        AdministratorId: findEmail.AdministratorId
       })
     } catch (error) {
       console.log(error, "<<<<errrorr dari sini")
@@ -47,7 +48,7 @@ module.exports = class AdminController {
         password,
         role: req.admin.role === 'admin' ? 'mitra' : 'driver',
         balance,
-        status,
+        status: "active",
         location: {
           type: "Point",
           coordinates: location
@@ -84,10 +85,24 @@ module.exports = class AdminController {
 
   static async readAllMitra(req, res, next) {
     try {
-      const getAllMitra = await Administrator.findAll({
-        where: { role: "mitra" } // Perbaikan disini
-      });
+      let getAllMitra;
 
+      if (req.admin.role === 'admin') {
+        getAllMitra = await Administrator.findAll({
+          where: {
+            role: "mitra"
+          }
+        });
+      } else if (req.admin.role === 'mitra') {
+        getAllMitra = await Administrator.findAll({
+          where: {
+            AdministratorId: req.admin.id,
+            role: "driver"
+          }
+        });
+      } else {
+        throw { name: "NOT_FOUND" };
+      }
       if (!req.headers.access_token) {
         throw { name: "Invalid token" };
       }
@@ -212,10 +227,24 @@ module.exports = class AdminController {
     }
   }
 
+  static async deleteMitraOrDriver(req, res, next) {
+    const id = +req.params.id;
+    try {
+      const data = await Administrator.findByPk(id);
+      console.log(data, "data auth");
+      if (!data) throw { name: 'NOT_FOUND' };
 
-
-
-
+      if (req.admin.id === data.AdministratorId || data.AdministratorId === null) {
+        await data.destroy();
+        res.status(200).json({ msg: `${data.mitraName} successfully deleted` });
+      } else {
+        throw { name: 'FORBIDDEN' };
+      }
+    } catch (error) {
+      console.log(error);
+      next(error);
+    }
+  }
 
 
 }

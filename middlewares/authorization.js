@@ -16,7 +16,7 @@ const authorization = async (req, res, next) => {
 };
 const authorizationForRole = async (req, res, next) => {
   try {
-    if (req.user.role === 'admin') {
+    if (req.admin.role === 'admin') {
       next()
     } else {
       {
@@ -24,6 +24,7 @@ const authorizationForRole = async (req, res, next) => {
       }
     }
   } catch (error) {
+    console.log(error)
     next(error)
   }
 
