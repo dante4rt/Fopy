@@ -2,6 +2,7 @@ const { Administrator, Order, OrderDetail, Service, User } = require('../models'
 const { comparePassword } = require('../helpers/bcrypt')
 const { signToken } = require('../helpers/jwt')
 const sequelize = require('sequelize');
+const { Op } = require("sequelize");
 module.exports = class AdminController {
   static async loginAdministrator(req, res, next) {
     try {
@@ -86,7 +87,6 @@ module.exports = class AdminController {
   static async readAllMitra(req, res, next) {
     try {
       let getAllMitra;
-
       if (req.admin.role === 'admin') {
         getAllMitra = await Administrator.findAll({
           where: {
@@ -112,21 +112,6 @@ module.exports = class AdminController {
     } catch (error) {
       console.log(error);
       next(error);
-    }
-  }
-
-  static async readAllRevenues(req, res, next) {
-    try {
-      const totalBalance = await Administrator.findOne({
-        attributes: [
-          [sequelize.fn('sum', sequelize.col('balance')), 'totalBalance']
-        ]
-      });
-      console.log(totalBalance, "<<<<<<");
-      res.status(200).json(totalBalance);
-    } catch (error) {
-      console.log(error);
-      next(error)
     }
   }
 
@@ -178,7 +163,11 @@ module.exports = class AdminController {
   static async getOrdersByMitra(req, res, next) {
     const id = req.admin.id
     try {
-      const getOrdersBymitra = await Order.findByPk(id)
+      const getOrdersBymitra = await Order.findAll({
+        where: {
+          AdministratorId: id
+        }
+      })
       res.status(200).json(getOrdersBymitra)
     } catch (error) {
       console.log(error);
@@ -245,6 +234,31 @@ module.exports = class AdminController {
       next(error);
     }
   }
+
+  static async totalBalance(req, res, next) {
+    try {
+      let whereCondition = {
+        [Op.or]: [
+          { AdministratorId: req.admin.id },
+          { AdministratorId: null }
+        ]
+      };
+
+      const totalBalance = await Administrator.findOne({
+        attributes: [
+          [sequelize.fn('sum', sequelize.col('balance')), 'totalBalance']
+        ],
+        where: whereCondition,
+      });
+
+      console.log(totalBalance, "<<<<<<");
+      res.status(200).json(totalBalance);
+    } catch (error) {
+      console.log(error);
+      next(error);
+    }
+  }
+
 
 
 }
