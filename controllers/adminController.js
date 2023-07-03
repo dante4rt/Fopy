@@ -7,7 +7,6 @@ module.exports = class AdminController {
   static async loginAdministrator(req, res, next) {
     try {
       const { email, password } = req.body
-      console.log(req.body)
 
       if (!email) throw { name: "Email is required" }
       if (!password) throw { name: "Password is required" }
@@ -46,7 +45,8 @@ module.exports = class AdminController {
         'ST_GeomFromText',
         getLoc
       )
-      console.log(getLoc, newLocation, "duaa")
+      const all = await Administrator.findAll()
+
       const createNewMitra = await Administrator.create({
         mitraName,
         email,
@@ -76,7 +76,7 @@ module.exports = class AdminController {
     try {
       const getServices = await Service.findAll()
       res.status(200).json(getServices)
-      // console.log(getServices);
+
     } catch (error) {
       next(error)
     }
@@ -102,7 +102,6 @@ module.exports = class AdminController {
         throw { name: "NOT_FOUND" };
       }
 
-      console.log(getAllMitra);
       res.status(200).json(getAllMitra);
     } catch (error) {
       next(error);
@@ -121,7 +120,7 @@ module.exports = class AdminController {
         imgUrl,
         type
       })
-      console.log(createServices, "<<<")
+
       res.status(201).json(createServices)
     } catch (error) {
       console.log(error)
@@ -130,12 +129,10 @@ module.exports = class AdminController {
   }
 
   static async updateOrders(req, res, next) {
-    console.log("masukkkkksjshidhdhud");
     const id = +req.params.id
-    console.log(id, "masukk");
+
     try {
       const data = await Order.findByPk(id)
-      console.log(data, "data auth")
       if (!data) throw { name: 'NOT_FOUND' }
 
       if (req.admin.id !== data.AdministratorId) throw { name: 'FORBIDDEN' }
@@ -147,7 +144,7 @@ module.exports = class AdminController {
           id,
         }
       })
-      console.log(updateTheProduct);
+
       res.status(200).json({ message: `updated status success from ${orderStatus} on id ${updateTheProduct}` })
     } catch (error) {
       next(error)
@@ -172,7 +169,7 @@ module.exports = class AdminController {
     const id = +req.params.id;
     try {
       const data = await Service.findByPk(id)
-      console.log(data, "data auth")
+
       if (!data) throw { name: 'NOT_FOUND' }
 
       if (req.admin.id !== data.AdministratorId) throw { name: 'FORBIDDEN' }
@@ -202,7 +199,7 @@ module.exports = class AdminController {
           AdministratorId: id,
         },
       })
-      console.log(findServicesByMitra, "<<<");
+
       res.status(200).json(findServicesByMitra)
     } catch (error) {
       next(error)
@@ -243,7 +240,7 @@ module.exports = class AdminController {
         where: whereCondition,
       });
 
-      console.log(totalBalance, "<<<<<<");
+
       res.status(200).json(totalBalance);
     } catch (error) {
       next(error);

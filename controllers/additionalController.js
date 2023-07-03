@@ -6,11 +6,10 @@ class additionalController {
     try {
       const { amount } = req.body;
       // let amount = 41111;
-      const findUser = await User.findByPk(req.user.id);
-
-      if (!findUser) {
-        throw { name: 'INVALID_TOKEN' };
+      if (!amount) {
+        throw { name: 'AMOUNT_MUST_BE_FILLED' }
       }
+      const findUser = await User.findByPk(req.user.id);
 
       const order = await Topup.create({
         amount,
@@ -25,7 +24,7 @@ class additionalController {
 
       let parameter = {
         transaction_details: {
-          order_id: 'FOPY_TX_' + order.id,
+          order_id: 'FOPY_TRX_' + order.id,
           gross_amount: order.amount,
         },
         credit_card: {
@@ -37,6 +36,7 @@ class additionalController {
       };
 
       const transaction = await snap.createTransaction(parameter);
+      console.log(amount, transaction, `<<<<`);
       res.status(201).json(transaction);
     } catch (error) {
       console.log(error);
@@ -80,7 +80,6 @@ class additionalController {
 
       res.status(200).json({ message: 'Balance updated!' });
     } catch (error) {
-      console.log(error);
       next(error);
     }
   }

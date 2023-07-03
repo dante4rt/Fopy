@@ -10,12 +10,12 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       mitraName: {
-        type: Sequelize.STRING,
-        allowNull: false
+        type: Sequelize.STRING
       },
       email: {
         type: Sequelize.STRING,
-        allowNull: false
+        allowNull: false,
+        unique: true
       },
       password: {
         type: Sequelize.STRING,
@@ -34,8 +34,7 @@ module.exports = {
         allowNull: false
       },
       location: {
-        type: Sequelize.GEOMETRY('POINT'),
-        allowNull: false
+        type: Sequelize.GEOMETRY('POINT')
       },
       AdministratorId: {
         type: Sequelize.INTEGER

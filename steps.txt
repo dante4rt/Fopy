@@ -1,8 +1,8 @@
 TEMPLATE JIKA ERROR :
-npx sequelize db:drop
-npx sequelize db:create
-npx sequelize db:migrate
-npx sequelize db:seed:all
+npx sequelize db:drop --env test
+npx sequelize db:create --env test
+npx sequelize db:migrate --env test
+npx sequelize db:seed:all --env test
 
 ===================================
 
@@ -26,9 +26,9 @@ STEPS :
  npm i sequelize && npm i -D sequelize-cli
  npx sequelize init (edit config.json bagian test, nama table => FopyDB_test)
  npx sequelize db:create --env test
-
- npx sequelize model:create --name Administrator --attributes mitraName:string,email:string,password:string,role:string,balance:integer,status:string,location:geometry,AdministratorId:integer
- npx sequelize model:create --name User --attributes username:string,email:string,password:string,balance:integer,imgUrl:string
+ --env test
+ px sequeli  --env testze model:create --name Administrator --attributes mitraName:string,email:string,password:string,role:string,balance:integer,status:string,location:geometry,AdministratorId:integer
+ nx sequelize model:cre  --env testate --name User --attributes username:string,email:string,password:string,balance:integer,imgUrl:string
  npx sequelize model:create --name Service --attributes AdministratorId:integer,name:string,price:integer,description:string,imgUrl:string,type:string
  npx sequelize model:create --name Order --attributes AdministratorId:integer,UserId:integer,totalPrice:integer,orderStatus:string,orderDate:date,location:geometry,deliveryMethod:string
  npx sequelize model:create --name OrderDetail --attributes ServiceId:integer,OrderId:integer,quantity:integer,totalPage:integer,url:string
