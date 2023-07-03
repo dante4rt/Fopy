@@ -1,7 +1,6 @@
-<<<<<<< HEAD
-node_modules
-=======
 .env
 node_modules
+<<<<<<< HEAD
+=======
 coverage
 >>>>>>> dev

@@ -1,0 +1,20 @@
+[
+  {
+    "AdministratorId": 2,
+    "UserId": 1,
+    "totalPrice": 727272,
+    "orderStatus": "pending",
+    "orderDate": "2023-06-30 20:20:37.924 +0700",
+    "location": "POINT(107.59278847659893 -6.942981263106864)",
+    "deliveryMethod": "driver delivery"
+  },
+  {
+    "AdministratorId": 3,
+    "UserId": 2,
+    "totalPrice": 8888,
+    "orderStatus": "completed",
+    "orderDate": "2023-06-30 20:20:37.924 +0700",
+    "location": "POINT(107.59278847659893 -6.942981263106864)",
+    "deliveryMethod": "self pick up"
+  }
+]

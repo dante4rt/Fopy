@@ -1,4 +1,4 @@
-const { Order } = require('../models');
+const { Order, Service } = require('../models');
 
 const authorization = async (req, res, next) => {
   try {
@@ -7,12 +7,26 @@ const authorization = async (req, res, next) => {
 
     if (!data) throw { name: 'NOT_FOUND' };
 
-    if (req.user.id !== data.authorId) throw { name: 'FORBIDDEN' };
+    if (req.user.id !== data.AdministratorId) throw { name: 'FORBIDDEN' };
 
     next();
   } catch (error) {
+    console.log(error);
     next(error);
   }
 };
 
-module.exports = authorization;
+const authorizationForRole = async (req, res, next) => {
+  try {
+    if (req.admin.role === 'admin') {
+      next()
+    } 
+  } catch (error) {
+    next(error)
+  }
+
+}
+
+
+
+module.exports = { authorization, authorizationForRole };
