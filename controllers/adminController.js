@@ -1,4 +1,4 @@
-const { Administrator, Order, OrderDetail, Service, User } = require('../models');
+const { Administrator, Order, OrderDetail, Service, User, Sequelize } = require('../models');
 const { comparePassword } = require('../helpers/bcrypt')
 const { signToken } = require('../helpers/jwt')
 const sequelize = require('sequelize');
@@ -39,7 +39,14 @@ module.exports = class AdminController {
 
   static async registerMitra(req, res, next) {
     try {
-      const { mitraName, email, password, role, balance, status, lat, lang } = req.body
+      const { mitraName, email, password, role, balance, status, location } = req.body
+      const splitLongLat = location.split(",")
+      const getLoc = `POINT(${splitLongLat[1]} ${splitLongLat[0]})`
+      let newLocation = Sequelize.fn(
+        'ST_GeomFromText',
+        getLoc
+      )
+      console.log(getLoc, newLocation, "duaa")
       const createNewMitra = await Administrator.create({
         mitraName,
         email,
@@ -47,13 +54,8 @@ module.exports = class AdminController {
         role: req.admin.role === 'admin' ? 'mitra' : 'driver',
         balance,
         status: "active",
-        location: {
-          type: "Point",
-          coordinates: location
-        },
+        location: newLocation,
         AdministratorId: req.admin.role === 'admin' ? null : req.admin.id,
-        // jika yang ngeadd = admin, maka adminId ga perlu
-        // jika yang request = mitra (buat ngeadd driver dia sendiri), maka AdminId = si Id adminnya wicis req.admin.id
       })
       res.status(201).json({
         mitraName: createNewMitra.mitraName,
@@ -76,7 +78,6 @@ module.exports = class AdminController {
       res.status(200).json(getServices)
       // console.log(getServices);
     } catch (error) {
-      console.log(error)
       next(error)
     }
   }
@@ -100,14 +101,10 @@ module.exports = class AdminController {
       } else {
         throw { name: "NOT_FOUND" };
       }
-      if (!req.headers.access_token) {
-        throw { name: "Invalid token" };
-      }
 
       console.log(getAllMitra);
       res.status(200).json(getAllMitra);
     } catch (error) {
-      console.log(error);
       next(error);
     }
   }
@@ -116,7 +113,8 @@ module.exports = class AdminController {
     try {
       const { name, price, description, imgUrl, type } = req.body
       const createServices = await Service.create({
-        AdministratorId: req.admin.id,
+        // AdministratorId: req.admin.id,
+        AdministratorId: 1,
         name,
         price,
         description,
@@ -152,7 +150,6 @@ module.exports = class AdminController {
       console.log(updateTheProduct);
       res.status(200).json({ message: `updated status success from ${orderStatus} on id ${updateTheProduct}` })
     } catch (error) {
-      console.log(error);
       next(error)
     }
   }
@@ -167,7 +164,6 @@ module.exports = class AdminController {
       })
       res.status(200).json(getOrdersBymitra)
     } catch (error) {
-      console.log(error);
       next(error)
     }
   }
@@ -209,7 +205,7 @@ module.exports = class AdminController {
       console.log(findServicesByMitra, "<<<");
       res.status(200).json(findServicesByMitra)
     } catch (error) {
-      console.log(error)
+      next(error)
     }
   }
 
@@ -217,12 +213,11 @@ module.exports = class AdminController {
     const id = +req.params.id;
     try {
       const data = await Administrator.findByPk(id);
-      console.log(data, "data auth");
       if (!data) throw { name: 'NOT_FOUND' };
 
       if (req.admin.id === data.AdministratorId || data.AdministratorId === null) {
         await data.destroy();
-        res.status(200).json({ msg: `${data.mitraName} successfully deleted` });
+        res.status(200).json({ msg: `Mitra with id ${id} successfully deleted` });
       } else {
         throw { name: 'FORBIDDEN' };
       }
@@ -251,7 +246,6 @@ module.exports = class AdminController {
       console.log(totalBalance, "<<<<<<");
       res.status(200).json(totalBalance);
     } catch (error) {
-      console.log(error);
       next(error);
     }
   }

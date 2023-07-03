@@ -11,20 +11,18 @@ const authenticationAdmin = async (req, res, next) => {
     }
     else {
       const codeToken = verifyToken(access_token)
+
       const checkAdminInDatabase = await Administrator.findOne({
         where: {
           email: codeToken.email
         }
       })
+
       if (!checkAdminInDatabase) {
-        {
           throw { name: "Invalid token" }
-        }
       }
-      else {
         req.admin = checkAdminInDatabase
         next()
-      }
     }
   } catch (error) {
     console.log(error)

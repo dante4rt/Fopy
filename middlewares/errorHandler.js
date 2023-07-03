@@ -34,13 +34,9 @@ const errorHandler = (error, req, res, next) => {
     res.status(401).json({ message: 'Invalid token' });
   } else if (error.name === 'FORBIDDEN') {
     res.status(403).json({ message: 'You are not authorized' });
-  } else if (err.name === 'MidtransError') {
-    res.status(400).json({ message: err.ApiResponse.error_messages[0] });
-  }
-  else if (error.name === 'Service not found') {
-    res.status(404).json({ message: 'Service not found please input the right number' })
-  }
-  else {
+  } else if (error.name === 'MidtransError') { // not tested yet
+    res.status(400).json({ message: error.ApiResponse.error_messages[0] });
+  } else {
     res.status(500).json({ message: "Internal Server Error" })
   }
 
