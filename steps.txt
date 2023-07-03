@@ -1,8 +1,8 @@
 TEMPLATE JIKA ERROR :
-npx sequelize db:drop --env test
-npx sequelize db:create --env test
-npx sequelize db:migrate --env test
-npx sequelize db:seed:all --env test
+npx sequelize db:drop
+npx sequelize db:create
+npx sequelize db:migrate
+npx sequelize db:seed:all
 
 ===================================
 
