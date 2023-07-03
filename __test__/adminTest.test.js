@@ -4,7 +4,7 @@ const models = require('../models');
 const app = require('../app');
 const bulkInsertAdmin = require('../helpers/bulkInsertAdmin');
 const { signToken, verifyToken } = require('../helpers/jwt');
-const { comparePassword } = require('../helpers/bcrypt');
+
 let access_token
 
 beforeAll(async function () {
@@ -207,7 +207,7 @@ describe('login Administrator', function () {
   })
 })
 
-describe('read All Services', function () {
+describe('read All Services By Admin', function () {
   test('GET/admin/services', async function () {
     const response = (await request(app).get('/admin/services').set("access_token", access_token))
     expect(response.status).toEqual(200)
@@ -219,29 +219,105 @@ describe('read All Services', function () {
   })
 })
 
-describe('read All Mitra', function () {
-  test('GET/admin/mitra', async function () {
-    const response = (await request(app).post('/admin/mitra').set("access_token", access_token))
+describe('read All Mitra/Driver', function () {
+  test('GET/admin/mitras', async function () {
+    const response = (await request(app).get('/admin/mitras').set("access_token", access_token))
     expect(response.status).toEqual(200)
   })
   test('failed GET/admin/mitra', async function () {
-    const response = (await request(app).post('/admin/mitra').set("access_token", '2JhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MywiZW1haWwiOiJtdXNhbmdAZ21haWwuY29tIiwiaWF0IjoxNjg1NzAwMDI2fQ.jErs6GoPMYq_tdCjHZlOUjxU9nNePwEwRuU8M53tCQA'))
+    const response = (await request(app).get('/admin/mitras').set("access_token", ''))
     expect(response.status).toEqual(401)
-    expect(response.body).toHaveProperty("message", 'Invalid token ')
+    expect(response.body).toHaveProperty("message", 'Invalid token')
+  })
+  test('failed GET/admin/mitra', async function () {
+    const response = (await request(app).get('/admin/mitras').set("access_token", 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJhZGVsYUBnbWFpbC5jb20iLCJpYXQiOjE2ODgxMTY4MDl9.6fF1EqOEv3NCCrgOStLJxZ7R3u2KNBldRZ-6A2RIzn'))
+    expect(response.status).toEqual(500)
+    expect(response.body).toHaveProperty("message", 'Internal Server Error')
   })
 })
 
-describe('read All Total Revenues', function () {
-  test('GET/admin/mitra', async function () {
-    const response = (await request(app).post('/admin/revenues').set("access_token", access_token))
+describe('read All Total Balance', function () {
+  test('GET/admin/balance', async function () {
+    const response = (await request(app).get('/admin/balance').set("access_token", access_token))
     expect(response.status).toEqual(200)
   })
-  test('failed GET/admin/mitra', async function () {
-    const response = (await request(app).post('/admin/revenues').set("access_token", '2JhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MywiZW1haWwiOiJtdXNhbmdAZ21haWwuY29tIiwiaWF0IjoxNjg1NzAwMDI2fQ.jErs6GoPMYq_tdCjHZlOUjxU9nNePwEwRuU8M53tCQA'))
+  test('failed GET/admin/balance', async function () {
+    const response = (await request(app).get('/admin/revenues').set("access_token", '2JhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MywiZW1haWwiOiJtdXNhbmdAZ21haWwuY29tIiwiaWF0IjoxNjg1NzAwMDI2fQ.jErs6GoPMYq_tdCjHZlOUjxU9nNePwEwRuU8M53tCQA'))
+    expect(response.status).toEqual(500)
+    expect(response.body).toHaveProperty("message", 'Internal Server Error')
+  })
+  test('failed GET/admin/balance', async function () {
+    const response = (await request(app).get('/admin/balance').set("access_token", ''))
     expect(response.status).toEqual(401)
-    expect(response.body).toHaveProperty("message", 'Invalid token ')
+    expect(response.body).toHaveProperty("message", 'Invalid token')
   })
 })
+
+describe('update Orders By Mitra', function () {
+  test('PATCH/orderstatus/:id', async function () {
+    const response = (await request(app).patch('/orderstatus/1').set("access_token", access_token))
+    expect(response.status).toEqual(200)
+  })
+  test('failed GET/admin/balance', async function () {
+    const response = (await request(app).patch('/orderstatus/1').set("access_token", '2JhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MywiZW1haWwiOiJtdXNhbmdAZ21haWwuY29tIiwiaWF0IjoxNjg1NzAwMDI2fQ.jErs6GoPMYq_tdCjHZlOUjxU9nNePwEwRuU8M53tCQA'))
+    expect(response.status).toEqual(500)
+    expect(response.body).toHaveProperty("message", 'Internal Server Error')
+  })
+  test('failed GET/admin/balance', async function () {
+    const response = (await request(app).patch('/admin/orderstatus/1').set("access_token", ''))
+    expect(response.status).toEqual(401)
+    expect(response.body).toHaveProperty("message", 'Invalid token')
+  })
+})
+
+describe('get Orders By Mitra', function () {
+  test('SUCCESS GET/admin/mitraorder', async function () {
+    const response = (await request(app).get('/admin/mitraorder').set("access_token", access_token))
+    expect(response.status).toEqual(200)
+  })
+  test('failed GET/admin/mitraorder', async function () {
+    const response = (await request(app).get('/admin/revenues').set("access_token", '2JhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MywiZW1haWwiOiJtdXNhbmdAZ21haWwuY29tIiwiaWF0IjoxNjg1NzAwMDI2fQ.jErs6GoPMYq_tdCjHZlOUjxU9nNePwEwRuU8M53tCQA'))
+    expect(response.status).toEqual(500)
+    expect(response.body).toHaveProperty("message", 'Internal Server Error')
+  })
+  test('failed GET/admin/mitraorder', async function () {
+    const response = (await request(app).get('/admin/mitraorder').set("access_token", ''))
+    expect(response.status).toEqual(401)
+    expect(response.body).toHaveProperty("message", 'Invalid token')
+  })
+})
+
+describe('read All Services By Mitra', function () {
+  test('SUCCESS GET/admin/mitraorder', async function () {
+    const response = (await request(app).get('/admin/mitraorder').set("access_token", access_token))
+    expect(response.status).toEqual(200)
+  })
+  test('failed GET/admin/mitraorder', async function () {
+    const response = (await request(app).get('/admin/mitraorder').set("access_token", '2JhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MywiZW1haWwiOiJtdXNhbmdAZ21haWwuY29tIiwiaWF0IjoxNjg1NzAwMDI2fQ.jErs6GoPMYq_tdCjHZlOUjxU9nNePwEwRuU8M53tCQA'))
+    expect(response.status).toEqual(500)
+    expect(response.body).toHaveProperty("message", 'Internal Server Error')
+  })
+  test('failed GET/admin/mitraorder', async function () {
+    const response = (await request(app).get('/admin/mitraorder').set("access_token", ''))
+    expect(response.status).toEqual(401)
+    expect(response.body).toHaveProperty("message", 'Invalid token')
+  })
+})
+
+describe('add Services', function () {
+
+})
+
+describe('edit Services', function () {
+
+})
+
+describe('delete Mitra/Drivers', function () {
+
+})
+
+
+
 
 
 

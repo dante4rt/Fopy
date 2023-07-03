@@ -1,7 +1,6 @@
-{
-  "services": [
+[
     {
-      "AdministratorId": 1,
+      "AdministratorId": 2,
       "name": "Fotocopy HVS A4/F4",
       "price": 500,
       "description": "Fotokopi dengan ukuran kertas A4 ataupun F4. Harga per lembar",
@@ -9,7 +8,7 @@
       "type": "service"
     },
     {
-      "AdministratorId": 1,
+      "AdministratorId": 3,
       "name": "Laminating / Laminasi Dokumen",
       "price": 4000,
       "description": "Jasa laminating sesuai deskripsi",
@@ -17,7 +16,7 @@
       "type": "service"
     },
     {
-      "AdministratorId": 1,
+      "AdministratorId": 2,
       "name": "Print Warna",
       "price": 1500,
       "description": "Harga tertera adalah untuk 1 sisi jika print 2 sisi (Bolak Balik) dihitung 2x",
@@ -25,7 +24,7 @@
       "type": "service"
     },
     {
-      "AdministratorId": 1,
+      "AdministratorId": 3,
       "name": "Print Hitam Putih",
       "price": 2500,
       "description": "Bahan Kertas HVS A3 75 GSM",
@@ -33,7 +32,7 @@
       "type": "service"
     },
     {
-      "AdministratorId": 1,
+      "AdministratorId": 3,
       "name": "Print Sertifikat / Piagam",
       "price": 20000,
       "description": "Menggunakan Kertas Concorde 220 gsm dan 90gsm Ukuran A4",
@@ -41,7 +40,7 @@
       "type": "service"
     },
     {
-      "AdministratorId": 1,
+      "AdministratorId": 3,
       "name": "Scan Dokumen A3",
       "price": 3000,
       "description": "Jasa scan dokumen ukuran A3, dengan menggunakan mesin fuji xerok jadi bisa cepat dan tajam",
@@ -49,7 +48,7 @@
       "type": "service"
     },
     {
-      "AdministratorId": 1,
+      "AdministratorId": 2,
       "name": "Scan Dokumen A4",
       "price": 2000,
       "description": "Jasa scan dokumen untuk merapikan file menjadi pdf atau jpg",
@@ -57,7 +56,7 @@
       "type": "service"
     },
     {
-      "AdministratorId": 1,
+      "AdministratorId": 2,
       "name": "Jilid Hard Cover",
       "price": 21000,
       "description": "Include Isi sama Cover, Sudah jadi buku",
@@ -65,7 +64,7 @@
       "type": "service"
     },
     {
-      "AdministratorId": 1,
+      "AdministratorId": 2,
       "name": "Jilid Spiral",
       "price": 15000,
       "description": "Harga per dokumen",
@@ -73,7 +72,7 @@
       "type": "service"
     },
     {
-      "AdministratorId": 1,
+      "AdministratorId": 2,
       "name": "Cetak Buku",
       "price": 40000,
       "description": "Sampul ape, kertas hvs",
@@ -81,7 +80,7 @@
       "type": "service"
     },
     {
-      "AdministratorId": 1,
+      "AdministratorId": 2,
       "name": "Sticky Notes",
       "price": 5000,
       "description": "Paket sticky notes dengan berbagai warna",
@@ -89,7 +88,7 @@
       "type": "product"
     },
     {
-      "AdministratorId": 1,
+      "AdministratorId": 2,
       "name": "Pensil Mekanik",
       "price": 10000,
       "description": "Pensil mekanik dengan ujung 0,7mm",
@@ -97,7 +96,7 @@
       "type": "product"
     },
     {
-      "AdministratorId": 1,
+      "AdministratorId": 2,
       "name": "Set Highlighter",
       "price": 15000,
       "description": "Set highlighter dengan 4 warna berbeda",
@@ -105,7 +104,7 @@
       "type": "product"
     },
     {
-      "AdministratorId": 1,
+      "AdministratorId": 2,
       "name": "Bolpoin",
       "price": 8000,
       "description": "Paket 5 bolpoin hitam",
@@ -113,7 +112,7 @@
       "type": "product"
     },
     {
-      "AdministratorId": 1,
+      "AdministratorId": 2,
       "name": "Buku Catatan",
       "price": 20000,
       "description": "Buku catatan ukuran A5 dengan halaman bergaris",
@@ -121,7 +120,7 @@
       "type": "product"
     },
     {
-      "AdministratorId": 1,
+      "AdministratorId": 3,
       "name": "Klip Kertas",
       "price": 7000,
       "description": "Paket klip kertas dengan ukuran berbeda",
@@ -129,7 +128,7 @@
       "type": "product"
     },
     {
-      "AdministratorId": 1,
+      "AdministratorId": 3,
       "name": "Pita Koreksi",
       "price": 12000,
       "description": "Pita koreksi putih untuk koreksi yang rapi",
@@ -137,7 +136,7 @@
       "type": "product"
     },
     {
-      "AdministratorId": 1,
+      "AdministratorId": 3,
       "name": "Set Penghapus",
       "price": 6000,
       "description": "Set penghapus dengan 3 bentuk dan ukuran yang berbeda",
@@ -145,7 +144,7 @@
       "type": "product"
     },
     {
-      "AdministratorId": 1,
+      "AdministratorId": 3,
       "name": "Klip Kertas",
       "price": 3000,
       "description": "Paket klip kertas berukuran kecil",
@@ -153,7 +152,7 @@
       "type": "product"
     },
     {
-      "AdministratorId": 1,
+      "AdministratorId": 2,
       "name": "Tab Indeks",
       "price": 9000,
       "description": "Set tab indeks untuk mengorganisir dokumen",
@@ -161,4 +160,4 @@
       "type": "product"
     }
   ]
-}
+

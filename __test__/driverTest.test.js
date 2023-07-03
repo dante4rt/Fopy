@@ -19,12 +19,13 @@ beforeAll(async function () {
       updatedAt: new Date(),
       createdAt: new Date(),
     })
-    .then((registeredUser) => {
-      validToken2 = jwt.sign({
-        id: registeredUser.id,
-        email: registeredUser.email,
-      }, SECRET)})
-      .then(async() => {
+      .then((registeredUser) => {
+        validToken2 = jwt.sign({
+          id: registeredUser.id,
+          email: registeredUser.email,
+        }, SECRET)
+      })
+      .then(async () => {
         await Administrator.create({
           email: 'user.test2@mail.com',
           password: 'usertest2',
@@ -34,18 +35,19 @@ beforeAll(async function () {
           updatedAt: new Date(),
           createdAt: new Date(),
         })
-        .then((registeredUser2) => {
-          validToken3 = jwt.sign({
-            id: registeredUser2.id,
-            email: registeredUser2.email,
-          }, SECRET)})
+          .then((registeredUser2) => {
+            validToken3 = jwt.sign({
+              id: registeredUser2.id,
+              email: registeredUser2.email,
+            }, SECRET)
+          })
       })
 
-      await User.create({
-        email: 'ramaa@mail.com',
-        password: '12345',
-        balance: 0
-      })
+    await User.create({
+      email: 'ramaa@mail.com',
+      password: '12345',
+      balance: 0
+    })
 
     await sequelize.queryInterface.bulkInsert('Orders', [
       {
@@ -150,7 +152,7 @@ describe('Driver Test', () => {
       expect(typeof response.body.message).toEqual('string');
       expect(response.body.message).toEqual('Password is required');
     });
-    
+
     test('POST /login failed because email is empty', async function () {
       const response = await request(app)
         .post('/driver/login')
@@ -179,7 +181,7 @@ describe('Driver Test', () => {
   });
 
   describe('GET /orders', () => {
-    test('200 success get orders', async function() {
+    test('200 success get orders', async function () {
       await request(app)
         .get('/driver/orders')
         .set('access_token', validToken2)
@@ -195,7 +197,7 @@ describe('Driver Test', () => {
         });
     });
 
-    test('401 get orders with invalid token', async function() {
+    test('401 get orders with invalid token', async function () {
       await request(app)
         .get('/driver/orders')
         .set('access_token', invalidToken)
@@ -210,7 +212,7 @@ describe('Driver Test', () => {
         });
     });
 
-    test('401 get orders without token', async function() {
+    test('401 get orders without token', async function () {
       await request(app)
         .get('/driver/orders')
         .then((response) => {
@@ -226,7 +228,7 @@ describe('Driver Test', () => {
   });
 
   describe('UPDATE /orders/:id', () => {
-    test('200 success update selected orders', async function() {
+    test('200 success update selected orders', async function () {
       await request(app)
         .patch(`/driver/orders/1`)
         .send({ status: 'Done' })
@@ -242,7 +244,7 @@ describe('Driver Test', () => {
         });
     });
 
-    test('403 update selected orders with unauthorized user', async function() {
+    test('403 update selected orders with unauthorized user', async function () {
       await request(app)
         .patch(`/driver/orders/2`)
         .set('access_token', validToken2)
@@ -258,7 +260,7 @@ describe('Driver Test', () => {
         });
     });
 
-    test('401 update selected orders with invalid token', async function() {
+    test('401 update selected orders with invalid token', async function () {
       await request(app)
         .patch(`/driver/orders/1`)
         .set('access_token', invalidToken)
@@ -273,7 +275,7 @@ describe('Driver Test', () => {
         });
     });
 
-    test('401 update selected orders without token', async function() {
+    test('401 update selected orders without token', async function () {
       await request(app)
         .patch(`/driver/orders/1`)
         .send({ status: 'Done' })
@@ -288,7 +290,7 @@ describe('Driver Test', () => {
         });
     });
 
-    test('404 update selected orders not found', async function() {
+    test('404 update selected orders not found', async function () {
       await request(app)
         .patch(`/driver/orders/99`)
         .set('access_token', validToken2)
