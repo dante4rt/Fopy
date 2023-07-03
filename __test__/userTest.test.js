@@ -4,6 +4,8 @@ const { sequelize } = require('../models')
 const fs = require('fs')
 const app = require('../app')
 const bcrypt = require('bcryptjs')
+const { signToken } = require('../helpers/jwt')
+let access_token;
 
 beforeAll(async () => {
     // User
@@ -42,6 +44,12 @@ beforeAll(async () => {
     })
 
     await sequelize.queryInterface.bulkInsert('Services', dataService)
+
+    access_token = signToken({
+        email: "alex01@example.com",
+        password: "securepass123",
+        balance: 2500000
+    })
 })
 
 afterAll(async () => {
@@ -90,9 +98,7 @@ describe('Divisi User Test', () => {
                 email: 123123, 
                 password: 123123, 
                 balance: 35000, 
-                imgUrl: "http://image.url.com", 
-                lat: "012321482", 
-                lang: "02131,43423"
+                imgUrl: "http://image.url.com"
             }
             const response = await request(app).post("/user/register").send(userDummy)
             expect(response.status).toBe(500)
@@ -103,9 +109,7 @@ describe('Divisi User Test', () => {
                 email: "adawong@mail.com", 
                 password: "john", 
                 balance: 35000, 
-                imgUrl: "http://image.url.com", 
-                lat: "012321482", 
-                lang: "02131,43423"
+                imgUrl: "http://image.url.com",
             }
             const response = await request(app).post("/user/register").send(userDummy)
             expect(response.status).toBe(400)
@@ -116,9 +120,7 @@ describe('Divisi User Test', () => {
                 username: "adawong", 
                 password: "john", 
                 balance: 35000, 
-                imgUrl: "http://image.url.com", 
-                lat: "012321482", 
-                lang: "02131,43423"
+                imgUrl: "http://image.url.com"
             }
             const response = await request(app).post("/user/register").send(userDummy)
             expect(response.status).toBe(400)
@@ -129,9 +131,7 @@ describe('Divisi User Test', () => {
                 username: "adawong", 
                 email: "adawong@mail.com",
                 balance: 35000, 
-                imgUrl: "http://image.url.com", 
-                lat: "012321482", 
-                lang: "02131,43423"
+                imgUrl: "http://image.url.com"
             }
             const response = await request(app).post("/user/register").send(userDummy)
             expect(response.status).toBe(400)
@@ -146,6 +146,8 @@ describe('Divisi User Test', () => {
                 password: "securepass123",
             }
             const response = await request(app).post("/user/login").send(userDummy)
+            // accessToken = response.body.accessToken; // Store the access token
+            expect(response.body).toHaveProperty('accessToken');
             expect(response.status).toBe(200)
         })
 
@@ -190,6 +192,147 @@ describe('Divisi User Test', () => {
             }
             const response = await request(app).post("/user/login").send(userDummy)
             expect(response.status).toBe(500)
+        })
+    })
+
+    // User melakukan update profile mereka
+    describe("PUT /user/editUser", () => {
+        test("User berhasil mengedit data mereka", async () => {
+            const userDummy = {
+                username: "Alaygaksih",
+                email: "alex01@example.com",
+                password: "securepass123",
+                balance: 2500000,
+                imgUrl: "https://example.com/images/alex01.jpg"
+            }
+
+            const response = await request(app)
+            .put("/user/editUser")
+            .set("access_token", access_token)
+            .send(userDummy);
+            expect(response.status).toBe(201)
+        })
+
+        test("PUT /user/editUser", async () => {
+            const userDummy = {
+                email: "alex01@example.com",
+                password: "securepass123",
+                balance: 2500,
+                imgUrl: "https://example.com/images/alex01.jpg"
+            }
+
+            const response = await request(app)
+            .put("/user/editUser")
+            .set("access_token", access_token)
+            .send(userDummy)
+            expect(response.status).toBe(400)
+        })
+
+        test("PUT /user/editUser", async () => {
+            const userDummy = {
+                username: "Alaygaksih",
+                password: "securepass123",
+                balance: 2500000,
+                imgUrl: "https://example.com/images/alex01.jpg"
+            }
+
+            const response = await request(app)
+            .put("/user/editUser")
+            .set("access_token", access_token)
+            .send(userDummy)
+            expect(response.status).toBe(400)
+        })
+
+        test("PUT /user/editUser", async () => {
+            const userDummy = {
+                username: "Alaygaksih",
+                email: "alex01@example.com",
+                balance: 2500000,
+                imgUrl: "https://example.com/images/alex01.jpg"
+            }
+
+            const response = await request(app)
+            .put("/user/editUser")
+            .set("access_token", access_token)
+            .send(userDummy)
+            expect(response.status).toBe(400)
+        })
+
+        test("PUT /user/editUser", async () => {
+            const userDummy = {
+                username: "Alaygaksih",
+                email: "alex01@example.com",
+                password: "securepass123",
+                balance: 2500000,
+            }
+
+            const response = await request(app)
+            .put("/user/editUser")
+            .set("access_token", access_token)
+            .send(userDummy)
+            expect(response.status).toBe(400)
+        })
+    })
+
+    // User membuat orderan baru (Tabel Order)
+    describe("POST /user/newOrder", () => {
+        test("User berhasil membuat orderan baru", async () => {
+            const order = { 
+                        AdministratorId: 1,
+                        totalPrice: 200,
+                        location: "POINT(107.59278847659893 -6.942981263106864)",
+                        deliveryMethod: "Delivery",
+                        totalPrice: 15000
+            }
+
+            const products = 
+                [
+                    {
+                      ServiceId: 1,
+                      quantity: 2,
+                      totalPage: 8,
+                      url: "http://image.com"
+                    },
+                    {
+                      ServiceId: 2,
+                      quantity: 5,
+                      totalPage: 10,
+                      url: "http://image.com"
+                    }
+                  ]
+
+            const response = await request(app)
+            .post("/user/newOrder")
+            .set('access_token', access_token) // Set the access token in headers
+            .send({order, products});
+            console.log(response, "<<<<<< ini response test")
+            expect(response.status).toBe(201)
+        })
+    })
+
+    // User membuat orderan baru (Tabel OrderDetails)
+    // describe("POST /user/addOrder", () => {
+    //     test("User berhasil membuat orderan baru", async () => {
+    //         const orderDummy = {
+    //             ServiceId: 1,
+    //             OrderId: 1,
+    //             quantity: 2,
+    //             totalPage: 8,
+    //             url: "http://image.com"
+    //         }
+    //         const response = await request(app).post("/user/addOrder").send(orderDummy)
+    //         expect(response.status).toBe(201)
+    //     })
+    // })
+
+    // Get atau membaca orderan yang dibuat oleh user 
+    describe("GET /user/getOrder", () => {
+        test("User membaca semua orderan yang dia buat", async () => {
+            const response = await request(app)
+            .get("/user/getOrder")
+            .set('access_token', access_token)
+    
+            expect(response.status).toBe(200)
         })
     })
 })

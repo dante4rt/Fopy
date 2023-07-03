@@ -57,6 +57,7 @@ const authenticationUser = async (req, res, next) => {
         // bawa kartu id gak lu ?
         const {access_token} = req.headers
         
+        console.log(access_token, "<<<<<<< ini dari !accessToken")
         if (!access_token) {
             res.status(401).json({message: "Invalid Token"})
         }
@@ -76,7 +77,7 @@ const authenticationUser = async (req, res, next) => {
         // bisa masuk
         next()
     } catch (error) {
-        console.log(error);
+        console.log(error, "<<<<< ini dari error authentications");
         next(error)
     }
 }
