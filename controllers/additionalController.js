@@ -5,10 +5,10 @@
 // router.post("/generate-payment", Controller.generateMidtransToken);
 
 const { signToken } = require('../helpers/jwt');
-const { User } = require('../models');
+const { User, Topup } = require('../models');
 const { TwitterApi } = require('twitter-api-v2');
-const midtransClient = require("midtrans-client");
-const {OAuth2Client} = require('google-auth-library');
+const midtransClient = require('midtrans-client');
+const { OAuth2Client } = require('google-auth-library');
 let o_t_secret;
 let twitterUsername;
 
@@ -36,6 +36,7 @@ class additionalController {
       next(error);
     }
   }
+  
   static async twitterCallback(req, res, next) {
     try {
       const { oauth_token, oauth_verifier } = req.query;
@@ -88,37 +89,42 @@ class additionalController {
         email: user.email,
       });
     } catch (error) {
-      console.log(error, '<<<');
+      console.log(error);
       next(error);
     }
   }
+
   static async generateMidtransToken(req, res, next) {
     try {
+      const { amount } = req.body;
+      // let amount = 41111;
       const findUser = await User.findByPk(req.user.id);
-      // const findUser = await User.findByPk(4)
 
-      if (findUser.isSubscribed) throw { name: "ALREADY_SUBS" };
+      if (!findUser) {
+        throw { name: 'INVALID_TOKEN' };
+      }
+
+      const order = await Topup.create({
+        amount,
+        UserId: req.user.id,
+        status: 'Pending',
+      });
 
       let snap = new midtransClient.Snap({
-        // Set to true if you want Production Environment (accept real transaction).
         isProduction: false,
         serverKey: process.env.MIDTRANS_SERVER_KEY,
       });
 
       let parameter = {
         transaction_details: {
-          order_id:
-            "FOPY_TX_" + Math.floor(1000000 + Math.random() * 4900000),
-          gross_amount: 10000,
+          order_id: 'FOPY_TX_' + order.id,
+          gross_amount: order.amount,
         },
         credit_card: {
           secure: true,
         },
         customer_details: {
-          // "first_name": "budi",
-          // "last_name": "pratama",
           email: findUser.email,
-          // "phone": "08111222333"
         },
       };
 
@@ -129,45 +135,86 @@ class additionalController {
       next(error);
     }
   }
-  static async googleLogin(req,res, next) {
+
+  static async midtransCheck(req, res, next) {
     try {
-        const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
-        const ticket = await client.verifyIdToken({
-          idToken: req.headers.google_token,
-          audience: process.env.GOOGLE_CLIENT_ID,
+      let { channel_response_message, gross_amount, order_id } = req.body;
+
+      order_id = order_id.split('_');
+
+      if (channel_response_message === 'Approved') {
+        const topup = await Topup.findByPk(order_id[order_id.length - 1]);
+
+        if (topup) {
+          const user = await User.findByPk(topup.UserId);
+          await User.update(
+            {
+              balance: user.balance + +gross_amount,
+            },
+            {
+              where: {
+                id: topup.UserId,
+              },
+            }
+          );
+          await Topup.update(
+            { status: 'Completed' },
+            {
+              where: {
+                id: topup.id,
+              },
+            }
+          );
+        } else {
+          throw { name: 'PAYMENT_UNSUCCESSFULLY' };
+        }
+      }
+
+      res.status(200).json({ message: 'Balance updated!' });
+    } catch (error) {
+      console.log(error);
+      next(error);
+    }
+  }
+
+  static async googleLogin(req, res, next) {
+    try {
+      const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
+      const ticket = await client.verifyIdToken({
+        idToken: req.headers.google_token,
+        audience: process.env.GOOGLE_CLIENT_ID,
       });
-      
+
       const payload = ticket.getPayload();
-    
+
       const [user, created] = await User.findOrCreate({
         where: { email: payload.email },
         defaults: {
-            username: payload.name,
-            email: payload.email,
-            password: '123456', 
-            isSubscribed: false,
-            isVerified: true
+          username: payload.name,
+          email: payload.email,
+          password: '123456',
+          isSubscribed: false,
+          isVerified: true,
         },
-        hooks: false
-        });
-    
-        const access_token = createToken({
-            id: user.id,
-            username: user.username,
-            email: user.email,
-        })
-    
-        res.status(200).json({ 
+        hooks: false,
+      });
+
+      const access_token = createToken({
+        id: user.id,
+        username: user.username,
+        email: user.email,
+      });
+
+      res.status(200).json({
         id: user.id,
         access_token: access_token,
         username: user.username,
         email: user.email,
-         })
-
-       } catch (error) {
-        next(error)
-       }
-}
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
 }
 
 module.exports = additionalController;

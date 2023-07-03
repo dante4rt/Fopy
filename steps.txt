@@ -32,5 +32,6 @@ STEPS :
  npx sequelize model:create --name Service --attributes AdministratorId:integer,name:string,price:integer,description:string,imgUrl:string,type:string
  npx sequelize model:create --name Order --attributes AdministratorId:integer,UserId:integer,totalPrice:integer,orderStatus:string,orderDate:date,location:geometry,deliveryMethod:string
  npx sequelize model:create --name OrderDetail --attributes ServiceId:integer,OrderId:integer,quantity:integer,totalPage:integer,url:string
+ npx sequelize model:create --name Topup --attributes UserId:integer,amount:integer,status:string
 
  npx sequelize db:migrate --env test
