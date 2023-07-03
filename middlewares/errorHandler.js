@@ -36,7 +36,10 @@ const errorHandler = (error, req, res, next) => {
     res.status(403).json({ message: 'You are not authorized' });
   } else if (error.name === 'MidtransError') { // not tested yet
     res.status(400).json({ message: error.ApiResponse.error_messages[0] });
-  } else {
+  } else if (error.name === 'PAYMENT_UNSUCCESSFULLY') {
+    res.status(401).json({ message: 'Payment failed!' })
+  }
+  else {
     res.status(500).json({ message: "Internal Server Error" })
   }
 
