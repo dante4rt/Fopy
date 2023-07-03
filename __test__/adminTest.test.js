@@ -5,7 +5,7 @@ const app = require('../app');
 const bulkInsertAdmin = require('../helpers/bulkInsertAdmin');
 const { signToken, verifyToken } = require('../helpers/jwt');
 
-let access_token, access_token2;
+let access_token, access_token2, access_token3;
 let serviceData = {
   AdministratorId: 2,
   name: 'Naaaah',
@@ -26,6 +26,11 @@ beforeAll(async function () {
   access_token2 = signToken({
     id: 1,
     email: 'jane.doe@example.com',
+    password: 'password123',
+  });
+
+  access_token3 = signToken({
+    email: 'Jack.doe@example.com',
     password: 'password123',
   });
 });
@@ -68,7 +73,6 @@ describe('register Account Administrator', function () {
         location: '37.7749,-122.4194',
       });
 
-      console.log(response, `<<< respon gue`);
     expect(response.status).toEqual(400);
     expect(response.body).toHaveProperty('message', 'Email is required');
   });
@@ -83,7 +87,7 @@ describe('register Account Administrator', function () {
         role: 'admin',
         balance: 5000,
         status: 'active',
-        location: '107.59278847659893,-6.942981263106864'
+        location: '107.59278847659893,-6.942981263106864',
       });
     expect(response.status).toEqual(400);
     expect(response.body).toHaveProperty('message', 'Password is required');
@@ -101,6 +105,7 @@ describe('register Account Administrator', function () {
         status: 'active',
         location: '37.7749,-122.4194',
       });
+
     expect(response.status).toEqual(400);
     expect(response.body).toHaveProperty('message', 'Email must be unique');
   });
@@ -160,7 +165,7 @@ describe('login Administrator', function () {
       email: 'john.doe@example.com',
       password: 'password123',
     });
-    console.log(response.body, 'ini login');
+
     expect(response.status).toEqual(201);
     expect(response.body).toHaveProperty('access_token');
   });
@@ -185,8 +190,8 @@ describe('login Administrator', function () {
       email: 'john.dose@example.com',
       password: 'password123',
     });
+
     expect(response.status).toEqual(401);
-    console.log(response.body, 'bodyyyyyyy ');
     expect(response.body).toHaveProperty('message', 'Invalid email/password');
   });
   test('failed POST/admin/login(401)', async function () {
@@ -194,8 +199,8 @@ describe('login Administrator', function () {
       email: 'john.doe@example.com',
       password: 'password12345ddd',
     });
+
     expect(response.status).toEqual(401);
-    console.log(response.body, 'bodyyyyyyy ');
     expect(response.body).toHaveProperty('message', 'Invalid email/password');
   });
 });
@@ -219,7 +224,10 @@ describe('read All Services By Admin', function () {
   test('failed GET/admin/services because email not found', async function () {
     const response = await request(app)
       .post('/admin/services')
-      .set('access_token', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MywiZW1haWwiOiJkYXZpZC5qb2huc29uQGV4YW1wbGUuY29tIiwiaWF0IjoxNjg4MzcwMjUzfQ.mULz17rNpUe0J70RPeFddaAhXKbwIzQaVsXp8SYAFVQ');
+      .set(
+        'access_token',
+        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MywiZW1haWwiOiJkYXZpZC5qb2huc29uQGV4YW1wbGUuY29tIiwiaWF0IjoxNjg4MzcwMjUzfQ.mULz17rNpUe0J70RPeFddaAhXKbwIzQaVsXp8SYAFVQ'
+      );
     expect(response.status).toEqual(401);
     expect(response.body).toHaveProperty('message', 'Invalid token');
   });
@@ -239,7 +247,16 @@ describe('read All Mitra/Driver', function () {
       .set('access_token', access_token2);
     expect(response.status).toEqual(200);
   });
-  
+
+  test('GET/admin/mitras from driver role', async function () {
+    const response = await request(app)
+      .get('/admin/mitras')
+      .set('access_token', access_token3);
+
+      expect(response.status).toEqual(404);
+      expect(response.body).toHaveProperty('message', 'Entity not found!');
+  });
+
   test('failed GET/admin/mitra because invalid token', async function () {
     const response = await request(app)
       .get('/admin/mitras')
