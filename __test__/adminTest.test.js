@@ -33,7 +33,7 @@ describe('register Account Administrator', function () {
       lat: "37.7749",
       lang: "-122.4194"
     })
-    
+
     expect(response.status).toEqual(201)
     expect((response) => {
       expect(response.body).toHaveProperty('id', expect.any(Number))
@@ -167,7 +167,6 @@ describe('login Administrator', function () {
         email: "john.doe@example.com",
         password: "password123",
       })
-    console.log(response.body, "ini login");
     expect(response.status).toEqual(201)
     expect(response.body).toHaveProperty("access_token")
   })
@@ -193,7 +192,6 @@ describe('login Administrator', function () {
       password: "password123",
     })
     expect(response.status).toEqual(401);
-    console.log(response.body, 'bodyyyyyyy ');
     expect(response.body).toHaveProperty("message", "Invalid email/password")
   })
   test('failed POST/admin/login(401)', async function () {
@@ -202,7 +200,6 @@ describe('login Administrator', function () {
       password: "password12345ddd",
     })
     expect(response.status).toEqual(401);
-    console.log(response.body, 'bodyyyyyyy ');
     expect(response.body).toHaveProperty("message", "Invalid email/password")
   })
 })

@@ -7,7 +7,7 @@ module.exports = class AdminController {
   static async loginAdministrator(req, res, next) {
     try {
       const { email, password } = req.body
-      console.log(req.body)
+
 
       if (!email) throw { name: "Email is required" }
       if (!password) throw { name: "Password is required" }
@@ -32,7 +32,7 @@ module.exports = class AdminController {
         AdministratorId: findEmail.AdministratorId
       })
     } catch (error) {
-      console.log(error)
+
       next(error)
     }
   }
@@ -40,15 +40,15 @@ module.exports = class AdminController {
   static async registerMitra(req, res, next) {
     try {
       const { mitraName, email, password, role, balance, status, location } = req.body
-      console.log(req.body, "<<<body")
+
       const splitLongLat = location.split(",")
-      console.log(splitLongLat, "<---=-=")
+
       const getLoc = `POINT(${splitLongLat[1]} ${splitLongLat[0]})`
       let newLocation = Sequelize.fn(
         'ST_GeomFromText',
         getLoc
       )
-      console.log(getLoc, newLocation, "duaa")
+
       const createNewMitra = await Administrator.create({
         mitraName,
         email,
@@ -75,7 +75,7 @@ module.exports = class AdminController {
         AdministratorId: createNewMitra.AdministratorId
       })
     } catch (error) {
-      console.log(error)
+
       next(error)
     }
   }
@@ -84,9 +84,9 @@ module.exports = class AdminController {
     try {
       const getServices = await Service.findAll()
       res.status(200).json(getServices)
-      // console.log(getServices);
+      //vices);
     } catch (error) {
-      console.log(error)
+
       next(error)
     }
   }
@@ -114,10 +114,10 @@ module.exports = class AdminController {
         throw { name: "Invalid token" };
       }
 
-      console.log(getAllMitra);
+
       res.status(200).json(getAllMitra);
     } catch (error) {
-      console.log(error);
+      ;
       next(error);
     }
   }
@@ -133,20 +133,20 @@ module.exports = class AdminController {
         imgUrl,
         type
       })
-      console.log(createServices, "<<<")
+
       res.status(201).json(createServices)
     } catch (error) {
-      console.log(error)
+
       next(error)
     }
   }
 
   static async updateOrders(req, res, next) {
     const id = +req.params.id;
-    console.log(id, "masukk");
+
     try {
       const data = await Order.findByPk(id);
-      console.log(data, "data auth");
+
       if (!data) throw { name: 'NOT_FOUND' };
 
       if (req.admin.id !== data.AdministratorId) throw { name: 'FORBIDDEN' };
@@ -161,13 +161,13 @@ module.exports = class AdminController {
             }
           }
         );
-        console.log(updateTheProduct);
+
         res.status(200).json({ message: `updated status success from ${orderStatus} on id ${updateTheProduct}` });
       } else {
         throw { name: 'Status already changed to completed!' };
       }
     } catch (error) {
-      console.log(error);
+      ;
       next(error);
     }
   }
@@ -193,7 +193,7 @@ module.exports = class AdminController {
       })
       res.status(200).json(getOrdersBymitra)
     } catch (error) {
-      console.log(error);
+      ;
       next(error)
     }
   }
@@ -202,7 +202,7 @@ module.exports = class AdminController {
     const id = +req.params.id;
     try {
       const data = await Service.findByPk(id)
-      console.log(data, "data auth")
+
       if (!data) throw { name: 'NOT_FOUND' }
 
       if (req.admin.id !== data.AdministratorId) throw { name: 'FORBIDDEN' }
@@ -219,24 +219,24 @@ module.exports = class AdminController {
       );
       res.status(200).json({ message: "Edit services success!" });
     } catch (error) {
-      console.log(error);
+      ;
       next(error);
     }
   }
 
   static async getServicesByMitra(req, res, next) {
     const id = req.admin.id
-    console.log(id, "<<<id")
+
     try {
       const findServicesByMitra = await Service.findAll({
         where: {
           AdministratorId: id,
         },
       })
-      console.log(findServicesByMitra, "<<<");
+
       res.status(200).json(findServicesByMitra)
     } catch (error) {
-      console.log(error)
+
       next(error)
     }
   }
@@ -245,7 +245,7 @@ module.exports = class AdminController {
     const id = +req.params.id;
     try {
       const data = await Administrator.findByPk(id);
-      console.log(data, "data auth");
+
       if (!data) throw { name: 'NOT_FOUND' };
 
       if (req.admin.id === data.AdministratorId || data.AdministratorId === null) {
@@ -255,7 +255,7 @@ module.exports = class AdminController {
         throw { name: 'FORBIDDEN' };
       }
     } catch (error) {
-      console.log(error);
+      ;
       next(error);
     }
   }
@@ -276,10 +276,10 @@ module.exports = class AdminController {
         where: whereCondition,
       });
 
-      console.log(totalBalance, "<<<<<<");
+
       res.status(200).json(totalBalance);
     } catch (error) {
-      console.log(error);
+      ;
       next(error);
     }
   }
@@ -288,18 +288,18 @@ module.exports = class AdminController {
     try {
       const id = req.params.id
       const AdministratorId = req.admin.id
-      console.log(id, "<<<id")
+
       const findServicesByMitra = await Service.findOne({
         where: {
           // AdministratorId: AdministratorId,
           id
         },
       })
-      console.log(findServicesByMitra)
+
       res.status(200).json(findServicesByMitra)
 
     } catch (error) {
-      console.log(error)
+
       next(error)
     }
   }

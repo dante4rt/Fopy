@@ -8,7 +8,7 @@ const { signToken } = require('../helpers/jwt');
 const { User } = require('../models');
 const { TwitterApi } = require('twitter-api-v2');
 const midtransClient = require("midtrans-client");
-const {OAuth2Client} = require('google-auth-library');
+const { OAuth2Client } = require('google-auth-library');
 let o_t_secret;
 let twitterUsername;
 
@@ -32,7 +32,7 @@ class additionalController {
 
       res.json(link);
     } catch (error) {
-      console.log(error);
+
       next(error);
     }
   }
@@ -88,7 +88,7 @@ class additionalController {
         email: user.email,
       });
     } catch (error) {
-      console.log(error, '<<<');
+
       next(error);
     }
   }
@@ -125,49 +125,48 @@ class additionalController {
       const transaction = await snap.createTransaction(parameter);
       res.status(201).json(transaction);
     } catch (error) {
-      console.log(error);
       next(error);
     }
   }
-  static async googleLogin(req,res, next) {
+  static async googleLogin(req, res, next) {
     try {
-        const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
-        const ticket = await client.verifyIdToken({
-          idToken: req.headers.google_token,
-          audience: process.env.GOOGLE_CLIENT_ID,
+      const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
+      const ticket = await client.verifyIdToken({
+        idToken: req.headers.google_token,
+        audience: process.env.GOOGLE_CLIENT_ID,
       });
-      
+
       const payload = ticket.getPayload();
-    
+
       const [user, created] = await User.findOrCreate({
         where: { email: payload.email },
         defaults: {
-            username: payload.name,
-            email: payload.email,
-            password: '123456', 
-            isSubscribed: false,
-            isVerified: true
+          username: payload.name,
+          email: payload.email,
+          password: '123456',
+          isSubscribed: false,
+          isVerified: true
         },
         hooks: false
-        });
-    
-        const access_token = createToken({
-            id: user.id,
-            username: user.username,
-            email: user.email,
-        })
-    
-        res.status(200).json({ 
+      });
+
+      const access_token = createToken({
+        id: user.id,
+        username: user.username,
+        email: user.email,
+      })
+
+      res.status(200).json({
         id: user.id,
         access_token: access_token,
         username: user.username,
         email: user.email,
-         })
+      })
 
-       } catch (error) {
-        next(error)
-       }
-}
+    } catch (error) {
+      next(error)
+    }
+  }
 }
 
 module.exports = additionalController;
