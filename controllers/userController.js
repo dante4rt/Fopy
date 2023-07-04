@@ -13,10 +13,10 @@ const { sequelize } = require('../models');
 class userController {
   /*Create Section*/
 
-  // Register (Table User)
-  static async register(req, res, next) {
-    try {
-      const { username, email, password, balance, imgUrl } = req.body;
+    // Register (Table User)
+    static async register (req, res) {
+        try {
+            const {username, email, password, imgUrl} = req.body
 
       if (!username) {
         res.status(400).json({ message: 'Username cannot be empty' });
@@ -33,13 +33,13 @@ class userController {
         return;
       }
 
-      const newUser = await User.create({
-        username,
-        email,
-        password,
-        balance,
-        imgUrl,
-      });
+            const newUser = await User.create({
+                username, 
+                email, 
+                password, 
+                balance: 0, 
+                imgUrl
+            })
 
       res.status(201).json({
         message: `User with username ${newUser.username} has been created`,
@@ -229,8 +229,88 @@ class userController {
       res.status(200).json(response);
     } catch (error) {
       next(error);
-    }
+    } 
   }
+
+    // Membaca semua mitra
+    static async getAllMitra (req, res) {
+        try {
+            const response = await Administrator.findAll({where: {status: "active", role: "mitra"}, attributes: {exclude: ['email', 'password', 'balance']}})
+            res.status(200).json(response)
+        } catch (error) {
+            res.status(500).json({message: "Internal Server Error"})
+        }
+    }
+
+    // Dapetin semua type = service
+    static async getAllService (req, res) {
+        try {
+            const id = req.params.id
+            const response = await Administrator.findAll(
+                {
+                    where: {id: id, status: "active", role: "mitra"}, 
+                    include: [{
+                        model: Service,
+                        where: { type: "service"},
+                        required: true
+                    }], 
+                    attributes: {exclude: ['email', 'password', 'balance']}
+                })
+            res.status(200).json(response)
+        } catch (error) {
+            res.status(500).json({message: "Internal Server Error"})
+        }
+    }
+
+    // Dapetin semua type = product
+    static async getAllProduct (req, res) {
+        try {
+            const id = req.params.id
+            const response = await Administrator.findAll(
+                {
+                    where: {id: id, status: "active", role: "mitra"}, 
+                    include: [{
+                        model: Service,
+                        where: { type: "product"},
+                        required: true
+                    }], 
+                    attributes: {exclude: ['email', 'password', 'balance']}
+                })
+            res.status(200).json(response)
+        } catch (error) {
+            res.status(500).json({message: "Internal Server Error"})
+        }
+    }
+
+    // Membaca mitra apa aja yang tersedia
+    static async getMitraByUser (req, res) {
+        try {
+            const id = req.params.id
+            const response = await Administrator.findAll(
+                {
+                    where: {id: id, status: "active", role: "mitra"}, 
+                    include: [Service], 
+                    attributes: {exclude: ['email', 'password', 'balance']}
+                })
+            res.status(200).json(response)
+        } catch (error) {
+            res.status(500).json({message: "Internal Server Error"})
+        }
+    }
+
+    // Membaca History Orderan Yang Berstatus Completed
+    static async getHistory (req, res) {
+        try {
+            const response = await Order.findAll(
+                {
+                    where: {UserId: req.user.id, orderStatus: "Completed"},
+                    include: [OrderDetail]
+                })
+            res.status(200).json(response)
+        } catch (error) {
+            res.status(500).json({message: "Internal Server Error"})
+        }
+    }
 }
 
 module.exports = userController;
