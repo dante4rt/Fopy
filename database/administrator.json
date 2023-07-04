@@ -7,7 +7,7 @@
     "balance": 5000,
     "status": "active",
     "location": "POINT(107.59278847659893 -6.942981263106864)",
-    "AdministratorId": null
+    "AdministratorId": 1
   },
   {
     "mitraName": "Jane Smith",

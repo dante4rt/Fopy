@@ -12,6 +12,16 @@ router.post('/midtrans/check', additionalController.midtransCheck)
 
 router.use(authenticationUser)
 
+router.get("/getMitraByUser", userController.getAllMitra)
+
+router.get("/getMitraByUser/:id", userController.getMitraByUser)
+
+router.get("/getMitraService/:id", userController.getAllService)
+
+router.get("/getMitraProduct/:id", userController.getAllProduct)
+
+router.get("/getHistory", userController.getHistory)
+
 router.get('/getUser', userController.getUser)
 
 router.put('/editUser', userController.updateUser)
