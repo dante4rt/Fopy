@@ -46,7 +46,6 @@ class driverController {
         // role: driver.role
       });
     } catch (error) {
-      console.log(error);
       next(error);
     }
   }

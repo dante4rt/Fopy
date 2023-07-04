@@ -25,19 +25,19 @@ module.exports = {
         references: {
           model: "Orders",
           key: "id"
-        }
+        },
+        onUpdate: 'cascade',
+      onDelete: 'cascade'
       },
       quantity: {
         type: Sequelize.INTEGER,
         allowNull: false
       },
       totalPage: {
-        type: Sequelize.INTEGER,
-        allowNull: false
+        type: Sequelize.INTEGER
       },
       url: {
-        type: Sequelize.STRING,
-        allowNull: false
+        type: Sequelize.STRING
       },
       createdAt: {
         allowNull: false,

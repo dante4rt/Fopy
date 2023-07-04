@@ -6,48 +6,66 @@ const app = require('../app');
 const SECRET = 'Bismillah';
 
 let validToken2, validToken3, invalidToken;
-invalidToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MywiZW1haWwiOiJkYXZpZC5qb2huc29uQGV4YW1wbGUuY29tIiwiaWF0IjoxNjg4MTQwMTAxfQ.81Kw6mkEVK8_bQifBTSZ1yEBuS_g1AvkckhI7Inp8Kk'
+invalidToken =
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MywiZW1haWwiOiJkYXZpZC5qb2huc29uQGV4YW1wbGUuY29tIiwiaWF0IjoxNjg4MTQwMTAxfQ.81Kw6mkEVK8_bQifBTSZ1yEBuS_g1AvkckhI7Inp8Kk';
 
 beforeAll(async function () {
   try {
     await Administrator.create({
+      mitraName: 'adela',
       email: 'user.test1@mail.com',
       password: 'usertest1',
-      role: 'driver',
+      role: 'admin',
       balance: 5000,
       status: 'active',
+      location: sequelize.fn(
+        'ST_GeomFromText',
+        'POINT(107.59278847659893 -6.942981263106864)'
+      ),
+      AdministratorId: 1,
       updatedAt: new Date(),
       createdAt: new Date(),
     })
       .then((registeredUser) => {
-        validToken2 = jwt.sign({
-          id: registeredUser.id,
-          email: registeredUser.email,
-        }, SECRET)
+        validToken2 = jwt.sign(
+          {
+            id: registeredUser.id,
+            email: registeredUser.email,
+          },
+          SECRET
+        );
       })
       .then(async () => {
         await Administrator.create({
           email: 'user.test2@mail.com',
           password: 'usertest2',
-          role: 'driver',
+          mitraName: 'adela',
+          role: 'admin',
           balance: 5000,
           status: 'active',
+          location: sequelize.fn(
+            'ST_GeomFromText',
+            'POINT(107.59278847659893 -6.942981263106864)'
+          ),
+          AdministratorId: 1,
           updatedAt: new Date(),
           createdAt: new Date(),
-        })
-          .then((registeredUser2) => {
-            validToken3 = jwt.sign({
+        }).then((registeredUser2) => {
+          validToken3 = jwt.sign(
+            {
               id: registeredUser2.id,
               email: registeredUser2.email,
-            }, SECRET)
-          })
-      })
+            },
+            SECRET
+          );
+        });
+      });
 
     await User.create({
       email: 'ramaa@mail.com',
       password: '12345',
-      balance: 0
-    })
+      balance: 0,
+    });
 
     await sequelize.queryInterface.bulkInsert('Orders', [
       {
@@ -77,7 +95,7 @@ beforeAll(async function () {
         deliveryMethod: 'Delivery',
         createdAt: new Date(),
         updatedAt: new Date(),
-      }
+      },
     ]);
   } catch (error) {
     console.log(error);
@@ -222,7 +240,7 @@ describe('Driver Test', () => {
           expect(body).toHaveProperty('message', 'Invalid token');
         })
         .catch((error) => {
-          console.log(error)
+          console.log(error);
         });
     });
   });
@@ -237,10 +255,13 @@ describe('Driver Test', () => {
           const { body, status } = response;
 
           expect(status).toBe(200);
-          expect(body).toHaveProperty('message', 'Order status has been updated!');
+          expect(body).toHaveProperty(
+            'message',
+            'Order status has been updated!'
+          );
         })
         .catch((error) => {
-          console.log(error)
+          console.log(error);
         });
     });
 
@@ -256,7 +277,7 @@ describe('Driver Test', () => {
           expect(body).toHaveProperty('message', 'You are not authorized');
         })
         .catch((error) => {
-          console.log(error)
+          console.log(error);
         });
     });
 
@@ -271,7 +292,7 @@ describe('Driver Test', () => {
           expect(body).toHaveProperty('message', 'Invalid token');
         })
         .catch((error) => {
-          console.log(error)
+          console.log(error);
         });
     });
 
@@ -286,7 +307,7 @@ describe('Driver Test', () => {
           expect(body).toHaveProperty('message', 'Invalid token');
         })
         .catch((error) => {
-          console.log(error)
+          console.log(error);
         });
     });
 
@@ -301,7 +322,7 @@ describe('Driver Test', () => {
           expect(body).toHaveProperty('message', 'Entity not found!');
         })
         .catch((error) => {
-          console.log(error)
+          console.log(error);
         });
     });
   });

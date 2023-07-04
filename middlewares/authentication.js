@@ -25,7 +25,6 @@ const authenticationAdmin = async (req, res, next) => {
         next()
     }
   } catch (error) {
-    console.log(error)
     next(error)
   }
 }
@@ -47,7 +46,6 @@ const authentication = async (req, res, next) => {
 
     next();
   } catch (error) {
-    console.log(error);
     next(error);
   }
 };
@@ -57,9 +55,8 @@ const authenticationUser = async (req, res, next) => {
         // bawa kartu id gak lu ?
         const {access_token} = req.headers
         
-        console.log(access_token, "<<<<<<< ini dari !accessToken")
         if (!access_token) {
-            res.status(401).json({message: "Invalid Token"})
+            return res.status(401).json({message: "Invalid Token" })
         }
 
         // ini token asli gak ?
@@ -69,15 +66,13 @@ const authenticationUser = async (req, res, next) => {
         const user = await User.findOne({where: {email: userId.email}})
 
         if (!user) {
-            res.status(401).json({message: "Invalid Token"})
+            return res.status(401).json({message: "Invalid Token" })
         }
 
         req.user = user 
 
-        // bisa masuk
         next()
     } catch (error) {
-        console.log(error, "<<<<< ini dari error authentications");
         next(error)
     }
 }
