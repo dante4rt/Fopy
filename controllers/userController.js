@@ -41,11 +41,9 @@ class userController {
         imgUrl,
       });
 
-      res
-        .status(201)
-        .json({
-          message: `User with username ${newUser.username} has been created`,
-        });
+      res.status(201).json({
+        message: `User with username ${newUser.username} has been created`,
+      });
     } catch (error) {
       next(error);
     }
@@ -56,6 +54,7 @@ class userController {
     try {
       const { email, password } = req.body;
 
+      console.log(req.body, "<< req.body")
       // check, is there email and password inputed ?
       if (!email) {
         res.status(400).json({ message: 'Please enter your email' });
@@ -68,7 +67,7 @@ class userController {
 
       // check, is there an email in our server with the one we just inputed ?
       const [user] = await User.findAll({ where: { email: email } });
-
+      console.log(user, '<><< user');
       if (!user) {
         res.status(404).json({ message: 'Email or Password is incorrect' });
         return;
@@ -76,6 +75,7 @@ class userController {
 
       // perform comparison with email's password from server with the one we just inputed !
       const isPassValid = bcrypt.compareSync(password, user.password);
+      console.log(isPassValid, '<><< isPassValid');
 
       if (!isPassValid) {
         res.status(401).json({ message: 'Email or Password is incorrect' });
@@ -83,14 +83,14 @@ class userController {
       }
 
       // if email's password from server match with the password we just inputed then perform hashing the token
-      const accessToken = signToken({
+      const access_token = signToken({
         id: user.id,
         email: user.email,
         username: user.username,
       });
 
       // after hashing the token we send it to headers browser
-      res.status(200).json({ accessToken });
+      res.status(200).json({ access_token });
     } catch (error) {
       next(error);
     }
@@ -142,7 +142,7 @@ class userController {
       console.log(user.balance, totalPrice, 'bzzzz');
       if (user.balance < totalPrice) {
         await incomingOrder.destroy({ transaction: t }); // Delete the incomingOrder if the balance is insufficient
-        throw { name: 'INSUFFICIENT_BALANCE' }
+        throw { name: 'INSUFFICIENT_BALANCE' };
       }
 
       user.balance -= totalPrice;
@@ -202,11 +202,9 @@ class userController {
         { where: { id: req.user.id } }
       );
 
-      res
-        .status(201)
-        .json({
-          message: `Data with username ${response.username} has been updated`,
-        });
+      res.status(201).json({
+        message: `Data with username ${response.username} has been updated`,
+      });
     } catch (error) {
       next(error);
     }
