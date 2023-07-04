@@ -9,6 +9,9 @@ let validToken2, validToken3, invalidToken;
 invalidToken =
   'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MywiZW1haWwiOiJkYXZpZC5qb2huc29uQGV4YW1wbGUuY29tIiwiaWF0IjoxNjg4MTQwMTAxfQ.81Kw6mkEVK8_bQifBTSZ1yEBuS_g1AvkckhI7Inp8Kk';
 
+let validToken4 =
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJhZGVsYUBnbWFpbC5jb20iLCJpYXQiOjE2ODg0ODgyNjJ9.h37SZ8EeKEBuizAI4YbefEgTfN42W-H9HdEguoSixUQ';
+
 beforeAll(async function () {
   try {
     await Administrator.create({
@@ -83,8 +86,8 @@ beforeAll(async function () {
         updatedAt: new Date(),
       },
       {
-        AdministratorId: 2,
-        UserId: 1,
+        AdministratorId: 7,
+        UserId: 2,
         totalPrice: 2000,
         orderStatus: 'Queued',
         orderDate: '2023-06-30 10:29:14.952 +0700',
@@ -103,13 +106,13 @@ beforeAll(async function () {
 });
 
 afterAll(async function () {
-  await Administrator.destroy({
+  await Order.destroy({
     truncate: true,
     cascade: true,
     restartIdentity: true,
   })
     .then(async (_) => {
-      await Order.destroy({
+      await Administrator.destroy({
         truncate: true,
         cascade: true,
         restartIdentity: true,
@@ -248,9 +251,9 @@ describe('Driver Test', () => {
   describe('UPDATE /orders/:id', () => {
     test('200 success update selected orders', async function () {
       await request(app)
-        .patch(`/driver/orders/1`)
+        .patch(`/driver/orders/3`)
         .send({ status: 'Done' })
-        .set('access_token', validToken2)
+        .set('access_token', validToken4)
         .then((response) => {
           const { body, status } = response;
 
