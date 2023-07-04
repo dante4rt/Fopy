@@ -417,8 +417,6 @@ describe('Divisi User Test', () => {
         .set('access_token', access_token)
         .send({ amount: 1000 });
 
-      console.log(response, `woiii`);
-
       expect(response.status).toEqual(201);
       expect(typeof response.body).toEqual('object');
       expect(response.body).toHaveProperty('token', expect.any(String));

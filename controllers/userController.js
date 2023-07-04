@@ -54,7 +54,6 @@ class userController {
     try {
       const { email, password } = req.body;
 
-      console.log(req.body, "<< req.body")
       // check, is there email and password inputed ?
       if (!email) {
         res.status(400).json({ message: 'Please enter your email' });
@@ -67,7 +66,6 @@ class userController {
 
       // check, is there an email in our server with the one we just inputed ?
       const [user] = await User.findAll({ where: { email: email } });
-      console.log(user, '<><< user');
       if (!user) {
         res.status(404).json({ message: 'Email or Password is incorrect' });
         return;
@@ -75,7 +73,6 @@ class userController {
 
       // perform comparison with email's password from server with the one we just inputed !
       const isPassValid = bcrypt.compareSync(password, user.password);
-      console.log(isPassValid, '<><< isPassValid');
 
       if (!isPassValid) {
         res.status(401).json({ message: 'Email or Password is incorrect' });
@@ -139,7 +136,6 @@ class userController {
       // Deduct the totalPrice from the user's balance
       const user = await User.findByPk(req.user.id);
 
-      console.log(user.balance, totalPrice, 'bzzzz');
       if (user.balance < totalPrice) {
         await incomingOrder.destroy({ transaction: t }); // Delete the incomingOrder if the balance is insufficient
         throw { name: 'INSUFFICIENT_BALANCE' };

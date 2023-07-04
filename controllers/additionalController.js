@@ -39,7 +39,6 @@ class additionalController {
       console.log(amount, transaction, `<<<<`);
       res.status(201).json(transaction);
     } catch (error) {
-      console.log(error);
       next(error);
     }
   }
@@ -84,7 +83,6 @@ class additionalController {
 
       res.status(200).json({ message: 'Balance updated!' });
     } catch (error) {
-      console.log(error);
       next(error);
     }
   }
