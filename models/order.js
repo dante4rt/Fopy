@@ -34,12 +34,7 @@ module.exports = (sequelize, DataTypes) => {
       }
     },
     totalPrice: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-      validate: {
-        notEmpty: { msg: 'Total price is required' },
-        notNull: { msg: 'Total price is required' },
-      }
+      type: DataTypes.INTEGER
     },
     orderStatus: {
       type: DataTypes.STRING,

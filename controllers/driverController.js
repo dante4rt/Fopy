@@ -46,25 +46,20 @@ class driverController {
         // role: driver.role
       });
     } catch (error) {
-      console.log(error);
       next(error);
     }
   }
   static async fetchOrders(req, res, next) {
-    const id = req.user.id
     try {
       // where status = pending
-      // id, AdministratorId
-      // dia akan nge-fetch semua order berdasarkan punya dia sendiri (id = id dia pas login)
       const orders = await Order.findAll({
         where: {
-          AdministratorId: id
+          AdministratorId: req.user.id
         }
       })
 
       res.json(orders)
     } catch (error) {
-      console.log(error);
       next(error);
     }
   }
@@ -86,7 +81,6 @@ class driverController {
 
       res.status(200).json({ message: 'Order status has been updated!' })
     } catch (error) {
-      console.log(error);
       next(error);
     }
   }

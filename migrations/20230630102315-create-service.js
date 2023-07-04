@@ -15,7 +15,9 @@ module.exports = {
         references: {
           model: "Administrators",
           key: "id"
-        }
+        },
+        onUpdate: 'cascade',
+      onDelete: 'cascade'
       },
       name: {
         type: Sequelize.STRING,
@@ -26,12 +28,10 @@ module.exports = {
         allowNull: false
       },
       description: {
-        type: Sequelize.STRING,
-        allowNull: false
+        type: Sequelize.STRING
       },
       imgUrl: {
-        type: Sequelize.STRING,
-        allowNull: false
+        type: Sequelize.STRING
       },
       type: {
         type: Sequelize.STRING,

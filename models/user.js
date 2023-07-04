@@ -45,6 +45,13 @@ module.exports = (sequelize, DataTypes) => {
     imgUrl: DataTypes.STRING
   }, {
     sequelize,
+    // hooks: {
+    //   beforeCreate(data, options) {
+    //     const salt = bcrypt.genSaltSync(8);
+    //     const hash = bcrypt.hashSync(data.password, salt)
+    //     data.password = hash
+    //   }
+    // },
     modelName: 'User',
   });
   User.beforeCreate((data, options) => {

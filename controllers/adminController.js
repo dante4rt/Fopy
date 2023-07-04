@@ -7,8 +7,6 @@ module.exports = class AdminController {
   static async loginAdministrator(req, res, next) {
     try {
       const { email, password } = req.body
-
-
       if (!email) throw { name: "Email is required" }
       if (!password) throw { name: "Password is required" }
       const findEmail = await Administrator.findOne({
@@ -32,7 +30,6 @@ module.exports = class AdminController {
         AdministratorId: findEmail.AdministratorId
       })
     } catch (error) {
-
       next(error)
     }
   }
@@ -57,13 +54,7 @@ module.exports = class AdminController {
         balance,
         status: "active",
         location: newLocation,
-
-
-
-        // location,
         AdministratorId: req.admin.role === 'admin' ? null : req.admin.id,
-        // jika yang ngeadd = admin, maka adminId ga perlu
-        // jika yang request = mitra (buat ngeadd driver dia sendiri), maka AdminId = si Id adminnya wicis req.admin.id
       })
       res.status(201).json({
         mitraName: createNewMitra.mitraName,
@@ -75,7 +66,6 @@ module.exports = class AdminController {
         AdministratorId: createNewMitra.AdministratorId
       })
     } catch (error) {
-
       next(error)
     }
   }
@@ -84,9 +74,8 @@ module.exports = class AdminController {
     try {
       const getServices = await Service.findAll()
       res.status(200).json(getServices)
-      //vices);
-    } catch (error) {
 
+    } catch (error) {
       next(error)
     }
   }
@@ -110,14 +99,9 @@ module.exports = class AdminController {
       } else {
         throw { name: "NOT_FOUND" };
       }
-      if (!req.headers.access_token) {
-        throw { name: "Invalid token" };
-      }
-
 
       res.status(200).json(getAllMitra);
     } catch (error) {
-      ;
       next(error);
     }
   }
@@ -126,7 +110,8 @@ module.exports = class AdminController {
     try {
       const { name, price, description, imgUrl, type } = req.body
       const createServices = await Service.create({
-        AdministratorId: req.admin.id,
+        // AdministratorId: req.admin.id,
+        AdministratorId: 1,
         name,
         price,
         description,
@@ -136,7 +121,6 @@ module.exports = class AdminController {
 
       res.status(201).json(createServices)
     } catch (error) {
-
       next(error)
     }
   }
@@ -193,7 +177,6 @@ module.exports = class AdminController {
       })
       res.status(200).json(getOrdersBymitra)
     } catch (error) {
-      ;
       next(error)
     }
   }
@@ -219,7 +202,6 @@ module.exports = class AdminController {
       );
       res.status(200).json({ message: "Edit services success!" });
     } catch (error) {
-      ;
       next(error);
     }
   }
@@ -236,7 +218,6 @@ module.exports = class AdminController {
 
       res.status(200).json(findServicesByMitra)
     } catch (error) {
-
       next(error)
     }
   }
@@ -245,17 +226,15 @@ module.exports = class AdminController {
     const id = +req.params.id;
     try {
       const data = await Administrator.findByPk(id);
-
       if (!data) throw { name: 'NOT_FOUND' };
 
       if (req.admin.id === data.AdministratorId || data.AdministratorId === null) {
         await data.destroy();
-        res.status(200).json({ msg: `${data.mitraName} successfully deleted` });
+        res.status(200).json({ msg: `Mitra with id ${id} successfully deleted` });
       } else {
         throw { name: 'FORBIDDEN' };
       }
     } catch (error) {
-      ;
       next(error);
     }
   }
@@ -279,7 +258,6 @@ module.exports = class AdminController {
 
       res.status(200).json(totalBalance);
     } catch (error) {
-      ;
       next(error);
     }
   }

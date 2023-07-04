@@ -18,6 +18,6 @@ adminRouter.get('/mitraorder', AdminController.getOrdersByMitra)
 adminRouter.put('/editservices/:id', AdminController.editServices)
 adminRouter.get('/services/mitra', AdminController.getServicesByMitra)
 adminRouter.get('/services/:id', AdminController.getServicesById)
-adminRouter.delete('/delete/mitra/:id', AdminController.deleteMitraOrDriver)
+adminRouter.delete('/delete/mitra/:id', authorizationForRole, AdminController.deleteMitraOrDriver)
 adminRouter.get('/balance', AdminController.totalBalance)
 module.exports = adminRouter

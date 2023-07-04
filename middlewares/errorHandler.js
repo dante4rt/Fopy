@@ -34,21 +34,18 @@ const errorHandler = (error, req, res, next) => {
     res.status(401).json({ message: 'Invalid token' });
   } else if (error.name === 'FORBIDDEN') {
     res.status(403).json({ message: 'You are not authorized' });
-  } else if (error.name === 'MidtransError') {
-    res.status(400).json({ message: err.ApiResponse.error_messages[0] });
-  }
-  else if (error.name === 'Service not found') {
-    res.status(404).json({ message: 'Service not found please input the right number' })
-  }
-  else if (error.name === 'Status already changed to completed!') {
-    res.status(200).json({
-      message: 'Status already changed to completed!'
-    })
+  } else if (error.name === 'PAYMENT_UNSUCCESSFULLY') {
+    res.status(400).json({ message: 'Payment failed!' })
+  } else if (error.name === 'INSUFFICIENT_BALANCE') {
+    res.status(400).json({ message: 'Insufficient balance!' })
+  } else if (error.name === 'AMOUNT_MUST_BE_FILLED') {
+    res.status(400).json({ message: 'Amount cannot be empty' })
+  } else if (error.name === 'EMPTY_FIELD') {
+    res.status(400).json({ message: 'Data must be filled!' })
   }
   else {
     res.status(500).json({ message: "Internal Server Error" })
   }
-
 }
 
 

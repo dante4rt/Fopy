@@ -4,7 +4,6 @@ const { Administrator, User } = require('../models')
 const authenticationAdmin = async (req, res, next) => {
   try {
     const { access_token } = req.headers
-    console.log(req.headers.access_token, "<><><><><><><><><><><><><>")
     if (!access_token) {
       {
         throw { name: 'Invalid token' }
@@ -12,13 +11,11 @@ const authenticationAdmin = async (req, res, next) => {
     }
     else {
       const codeToken = verifyToken(access_token)
-      console.log(codeToken, "<<<codetooken")
       const checkAdminInDatabase = await Administrator.findOne({
         where: {
           email: codeToken.email
         }
       })
-      console.log("check ADminnn", checkAdminInDatabase)
       if (!checkAdminInDatabase) {
         {
           throw { name: "Invalid token" }
@@ -30,7 +27,6 @@ const authenticationAdmin = async (req, res, next) => {
       }
     }
   } catch (error) {
-    console.log(error)
     next(error)
   }
 }
@@ -52,7 +48,6 @@ const authentication = async (req, res, next) => {
 
     next();
   } catch (error) {
-    console.log(error);
     next(error);
   }
 };
@@ -81,7 +76,6 @@ const authenticationUser = async (req, res, next) => {
     // bisa masuk
     next()
   } catch (error) {
-    console.log(error);
     next(error)
   }
 }

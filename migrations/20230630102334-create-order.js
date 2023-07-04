@@ -15,7 +15,9 @@ module.exports = {
         references: {
           model: "Administrators",
           key: "id"
-        }
+        },
+        onUpdate: 'cascade',
+      onDelete: 'cascade'
       },
       UserId: {
         type: Sequelize.INTEGER,
@@ -23,7 +25,9 @@ module.exports = {
         references: {
           model: "Users",
           key: "id"
-        }
+        },
+        onUpdate: 'cascade',
+      onDelete: 'cascade'
       },
       totalPrice: {
         type: Sequelize.INTEGER,
