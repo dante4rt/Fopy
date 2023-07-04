@@ -1,12 +1,14 @@
 const { describe, test, expect } = require('@jest/globals');
 const request = require('supertest');
-const { sequelize, Administrator, User, Service } = require('../models');
+const { sequelize, Administrator, User, Service, Order } = require('../models');
 const fs = require('fs');
 const app = require('../app');
 const bcrypt = require('bcryptjs');
 const { signToken } = require('../helpers/jwt');
 const { hashPassword } = require('../helpers/bcrypt');
 let access_token;
+const access_token2 =
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiZW1haWwiOiJzYXJhODdAZXhhbXBsZS5jb20iLCJ1c2VybmFtZSI6InNhcmE4NyIsImlhdCI6MTY4ODQ4NjIzMX0._A9HG2cI0ddwJm04YzcwnjwFRuZqWv0ivva19iX2ESc';
 
 beforeAll(async () => {
   // User
@@ -55,18 +57,36 @@ beforeAll(async () => {
     });
 
     await sequelize.queryInterface.bulkInsert('Services', dataService);
+
+    // Order
+    let orderService = JSON.parse(
+      fs.readFileSync('./database/order.json', 'utf-8')
+    ).map((el) => {
+      el.createdAt = new Date();
+      el.updatedAt = new Date();
+      return el;
+    });
+
+    await sequelize.queryInterface.bulkInsert('Orders', orderService);
   } catch (error) {
     console.log(error);
   }
 });
 
 afterAll(async () => {
-  await Service.destroy({
+  await Order.destroy({
     truncate: true,
     cascade: true,
     restartIdentity: true,
   })
+
     .then(async (_) => {
+      await Service.destroy({
+        truncate: true,
+        cascade: true,
+        restartIdentity: true,
+      });
+
       await User.destroy({
         truncate: true,
         cascade: true,
@@ -456,7 +476,7 @@ describe('Divisi User Test', () => {
     test('POST /midtrans/check failed because body is empty', async () => {
       const response = await request(app)
         .post('/user/midtrans/check')
-        .set('access_token', access_token)
+        .set('access_token', access_token);
 
       expect(response.status).toEqual(400);
       expect(typeof response.body).toEqual('object');
@@ -469,15 +489,208 @@ describe('Divisi User Test', () => {
         .post('/user/midtrans/check')
         .set('access_token', access_token)
         .send({
-          channel_response_message: 'Approved', 
-          gross_amount: 10000, 
-          order_id: 'FOPY_TX_111111'
-        })
+          channel_response_message: 'Approved',
+          gross_amount: 10000,
+          order_id: 'FOPY_TX_111111',
+        });
 
       expect(response.status).toEqual(400);
       expect(typeof response.body).toEqual('object');
       expect(response.body).toHaveProperty('message', expect.any(String));
       expect(response.body.message).toEqual('Payment failed!');
+    });
+  });
+
+  describe('GET /getUser', () => {
+    test('GET /getUser success', async () => {
+      const response = await request(app)
+        .get('/user/getUser')
+        .set('access_token', access_token);
+
+      expect(response.status).toBe(200);
+      expect(typeof response.body).toEqual('object');
+      expect(response.body).toHaveProperty('id', expect.any(Number));
+      expect(response.body).toHaveProperty('username', expect.any(String));
+      expect(response.body).toHaveProperty('email', expect.any(String));
+      expect(response.body).toHaveProperty('balance', expect.any(Number));
+      expect(response.body).toHaveProperty('imgUrl', expect.any(String));
+    });
+  });
+
+  describe('GET /getOrder', () => {
+    test('GET /getOrder success', async () => {
+      const response = await request(app)
+        .get('/user/getOrder')
+        .set('access_token', access_token);
+
+      console.log(response.body[0], typeof response.body, `<<<< kk`);
+      expect(response.status).toBe(200);
+      expect(typeof response.body).toEqual('object');
+      expect(response.body[0]).toHaveProperty('id', expect.any(Number));
+      expect(response.body[0]).toHaveProperty(
+        'AdministratorId',
+        expect.any(Number)
+      );
+      expect(response.body[0]).toHaveProperty('UserId', expect.any(Number));
+      expect(response.body[0]).toHaveProperty('totalPrice', expect.any(Number));
+      expect(response.body[0]).toHaveProperty(
+        'orderStatus',
+        expect.any(String)
+      );
+      expect(response.body[0]).toHaveProperty('orderDate', expect.any(String));
+      expect(response.body[0]).toHaveProperty(
+        'deliveryMethod',
+        expect.any(String)
+      );
+    });
+  });
+
+  describe('GET /getMitraByUser', () => {
+    test('GET /getMitraByUser success', async () => {
+      const response = await request(app)
+        .get('/user/getMitraByUser')
+        .set('access_token', access_token);
+
+      expect(response.status).toBe(200);
+      expect(typeof response.body).toEqual('object');
+      expect(response.body[0]).toHaveProperty('id', expect.any(Number));
+      expect(response.body[0]).toHaveProperty(
+        'AdministratorId',
+        expect.any(Number)
+      );
+      expect(response.body[0]).toHaveProperty('mitraName', expect.any(String));
+      expect(response.body[0]).toHaveProperty('role', expect.any(String));
+      expect(response.body[0]).toHaveProperty('status', expect.any(String));
+    });
+  });
+
+  describe('GET /getMitraService/:id', () => {
+    beforeAll(async () => {
+      await Service.create({
+        AdministratorId: 2,
+        name: 'Fotocopy HVS A4/F4',
+        price: 500,
+        description:
+          'Fotokopi dengan ukuran kertas A4 ataupun F4. Harga per lembar',
+        imgUrl:
+          'http://www.librairie-traitdunion.com/templates/yootheme/cache/photocopieur-b2a0999c.jpeg',
+        type: 'service',
+      });
+    });
+    test('GET /getMitraService/2 success', async () => {
+      const response = await request(app)
+        .get('/user/getMitraService/2')
+        .set('access_token', access_token2);
+
+      expect(response.status).toBe(200);
+      expect(typeof response.body).toEqual('object');
+      expect(response.body[0]).toHaveProperty('id', expect.any(Number));
+      expect(response.body[0]).toHaveProperty(
+        'AdministratorId',
+        expect.any(Number)
+      );
+      expect(response.body[0]).toHaveProperty('mitraName', expect.any(String));
+      expect(response.body[0]).toHaveProperty('role', expect.any(String));
+      expect(response.body[0]).toHaveProperty('status', expect.any(String));
+    });
+    test('GET /getMitraService/100 failed because entity not found', async () => {
+      const response = await request(app)
+        .get('/user/getMitraService/100')
+        .set('access_token', access_token2);
+
+      expect(response.status).toBe(404);
+      expect(typeof response.body).toEqual('object');
+      expect(response.body).toHaveProperty('message', expect.any(String));
+      expect(response.body.message).toEqual('Entity not found!');
+    });
+  });
+
+  describe('GET /getMitraProduct/:id', () => {
+    test('GET /getMitraProduct/2 success', async () => {
+      const response = await request(app)
+        .get('/user/getMitraProduct/2')
+        .set('access_token', access_token2);
+
+      expect(response.status).toBe(200);
+      expect(typeof response.body).toEqual('object');
+      expect(response.body[0]).toHaveProperty('id', expect.any(Number));
+      expect(response.body[0]).toHaveProperty(
+        'AdministratorId',
+        expect.any(Number)
+      );
+      expect(response.body[0]).toHaveProperty('mitraName', expect.any(String));
+      expect(response.body[0]).toHaveProperty('role', expect.any(String));
+      expect(response.body[0]).toHaveProperty('status', expect.any(String));
+    });
+    test('GET /getMitraProduct/100 failed because entity not found', async () => {
+      const response = await request(app)
+        .get('/user/getMitraProduct/100')
+        .set('access_token', access_token2);
+
+      expect(response.status).toBe(404);
+      expect(typeof response.body).toEqual('object');
+      expect(response.body).toHaveProperty('message', expect.any(String));
+      expect(response.body.message).toEqual('Entity not found!');
+    });
+  });
+
+  describe('GET /getMitraByUser/:id', () => {
+    test('GET /getMitraByUser/2 success', async () => {
+      const response = await request(app)
+        .get('/user/getMitraByUser/2')
+        .set('access_token', access_token2);
+
+      expect(response.status).toBe(200);
+      expect(typeof response.body).toEqual('object');
+      expect(response.body[0]).toHaveProperty('id', expect.any(Number));
+      expect(response.body[0]).toHaveProperty(
+        'AdministratorId',
+        expect.any(Number)
+      );
+      expect(response.body[0]).toHaveProperty('mitraName', expect.any(String));
+      expect(response.body[0]).toHaveProperty('role', expect.any(String));
+      expect(response.body[0]).toHaveProperty('status', expect.any(String));
+    });
+    test('GET /getMitraByUser/100 failed because entity not found', async () => {
+      const response = await request(app)
+        .get('/user/getMitraByUser/100')
+        .set('access_token', access_token2);
+
+      expect(response.status).toBe(404);
+      expect(typeof response.body).toEqual('object');
+      expect(response.body).toHaveProperty('message', expect.any(String));
+      expect(response.body.message).toEqual('Entity not found!');
+    });
+  });
+
+  describe('GET /getHistory', () => {
+    test('GET /getHistory success', async () => {
+      const response = await request(app)
+        .get('/user/getHistory')
+        .set('access_token', access_token);
+
+      expect(response.status).toBe(200);
+      expect(typeof response.body).toEqual('object');
+      expect(response.body[0]).toHaveProperty('id', expect.any(Number));
+      expect(response.body[0]).toHaveProperty('UserId', expect.any(Number));
+      expect(response.body[0]).toHaveProperty(
+        'AdministratorId',
+        expect.any(Number)
+      );
+      expect(response.body[0]).toHaveProperty('deliveryMethod', expect.any(String));
+      expect(response.body[0]).toHaveProperty('orderStatus', expect.any(String));
+      expect(response.body[0]).toHaveProperty('orderDate', expect.any(String));
+    });
+
+    test('GET /getHistory failed because entity not found', async () => {
+      const response = await request(app)
+        .get('/user/getHistory')
+        .set('access_token', access_token2);
+
+      expect(response.status).toBe(404);
+      expect(typeof response.body).toEqual('object');
+      expect(response.body).toHaveProperty('message', expect.any(String));
+      expect(response.body.message).toEqual('Entity not found!');
     });
   });
 });
