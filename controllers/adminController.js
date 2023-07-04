@@ -1,7 +1,7 @@
-const { Administrator, Order, OrderDetail, Service, User } = require('../models');
+const { Administrator, Order, OrderDetail, Service, User, Sequelize, sequelize } = require('../models');
 const { comparePassword } = require('../helpers/bcrypt')
 const { signToken } = require('../helpers/jwt')
-const sequelize = require('sequelize');
+
 const { Op } = require("sequelize");
 module.exports = class AdminController {
   static async loginAdministrator(req, res, next) {
@@ -39,7 +39,16 @@ module.exports = class AdminController {
 
   static async registerMitra(req, res, next) {
     try {
-      const { mitraName, email, password, role, balance, status, lat, lang } = req.body
+      const { mitraName, email, password, role, balance, status, location } = req.body
+      console.log(req.body, "<<<body")
+      const splitLongLat = location.split(",")
+      console.log(splitLongLat, "<---=-=")
+      const getLoc = `POINT(${splitLongLat[1]} ${splitLongLat[0]})`
+      let newLocation = Sequelize.fn(
+        'ST_GeomFromText',
+        getLoc
+      )
+      console.log(getLoc, newLocation, "duaa")
       const createNewMitra = await Administrator.create({
         mitraName,
         email,
@@ -47,10 +56,11 @@ module.exports = class AdminController {
         role: req.admin.role === 'admin' ? 'mitra' : 'driver',
         balance,
         status: "active",
-        location: {
-          type: "Point",
-          coordinates: location
-        },
+        location: newLocation,
+
+
+
+        // location,
         AdministratorId: req.admin.role === 'admin' ? null : req.admin.id,
         // jika yang ngeadd = admin, maka adminId ga perlu
         // jika yang request = mitra (buat ngeadd driver dia sendiri), maka AdminId = si Id adminnya wicis req.admin.id
@@ -132,28 +142,33 @@ module.exports = class AdminController {
   }
 
   static async updateOrders(req, res, next) {
-    console.log("masukkkkksjshidhdhud");
-    const id = +req.params.id
+    const id = +req.params.id;
     console.log(id, "masukk");
     try {
-      const data = await Order.findByPk(id)
-      console.log(data, "data auth")
-      if (!data) throw { name: 'NOT_FOUND' }
+      const data = await Order.findByPk(id);
+      console.log(data, "data auth");
+      if (!data) throw { name: 'NOT_FOUND' };
 
-      if (req.admin.id !== data.AdministratorId) throw { name: 'FORBIDDEN' }
+      if (req.admin.id !== data.AdministratorId) throw { name: 'FORBIDDEN' };
 
-      const { orderStatus } = req.body
-      const updateTheProduct = await Order.update(
-        { orderStatus }, {
-        where: {
-          id,
-        }
-      })
-      console.log(updateTheProduct);
-      res.status(200).json({ message: `updated status success from ${orderStatus} on id ${updateTheProduct}` })
+      const { orderStatus } = req.body;
+      if (orderStatus !== "completed") {
+        const updateTheProduct = await Order.update(
+          { orderStatus },
+          {
+            where: {
+              id,
+            }
+          }
+        );
+        console.log(updateTheProduct);
+        res.status(200).json({ message: `updated status success from ${orderStatus} on id ${updateTheProduct}` });
+      } else {
+        throw { name: 'Status already changed to completed!' };
+      }
     } catch (error) {
       console.log(error);
-      next(error)
+      next(error);
     }
   }
 
@@ -163,7 +178,18 @@ module.exports = class AdminController {
       const getOrdersBymitra = await Order.findAll({
         where: {
           AdministratorId: id
-        }
+        },
+        include: [
+          {
+            model: User
+          },
+          {
+            model: OrderDetail,
+            include: {
+              model: Service
+            }
+          }
+        ]
       })
       res.status(200).json(getOrdersBymitra)
     } catch (error) {
@@ -200,6 +226,7 @@ module.exports = class AdminController {
 
   static async getServicesByMitra(req, res, next) {
     const id = req.admin.id
+    console.log(id, "<<<id")
     try {
       const findServicesByMitra = await Service.findAll({
         where: {
@@ -210,6 +237,7 @@ module.exports = class AdminController {
       res.status(200).json(findServicesByMitra)
     } catch (error) {
       console.log(error)
+      next(error)
     }
   }
 
@@ -253,6 +281,26 @@ module.exports = class AdminController {
     } catch (error) {
       console.log(error);
       next(error);
+    }
+  }
+
+  static async getServicesById(req, res, next) {
+    try {
+      const id = req.params.id
+      const AdministratorId = req.admin.id
+      console.log(id, "<<<id")
+      const findServicesByMitra = await Service.findOne({
+        where: {
+          // AdministratorId: AdministratorId,
+          id
+        },
+      })
+      console.log(findServicesByMitra)
+      res.status(200).json(findServicesByMitra)
+
+    } catch (error) {
+      console.log(error)
+      next(error)
     }
   }
 

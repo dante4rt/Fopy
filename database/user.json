@@ -1,12 +1,5 @@
 [
   {
-    "username": "alex01",
-    "email": "alex01@example.com",
-    "password": "securepass123",
-    "balance": 2500,
-    "imgUrl": "https://example.com/images/alex01.jpg"
-  },
-  {
     "username": "sara87",
     "email": "sara87@example.com",
     "password": "password789",

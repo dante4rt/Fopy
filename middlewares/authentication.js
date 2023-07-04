@@ -4,6 +4,7 @@ const { Administrator, User } = require('../models')
 const authenticationAdmin = async (req, res, next) => {
   try {
     const { access_token } = req.headers
+    console.log(req.headers.access_token, "<><><><><><><><><><><><><>")
     if (!access_token) {
       {
         throw { name: 'Invalid token' }
@@ -11,11 +12,13 @@ const authenticationAdmin = async (req, res, next) => {
     }
     else {
       const codeToken = verifyToken(access_token)
+      console.log(codeToken, "<<<codetooken")
       const checkAdminInDatabase = await Administrator.findOne({
         where: {
           email: codeToken.email
         }
       })
+      console.log("check ADminnn", checkAdminInDatabase)
       if (!checkAdminInDatabase) {
         {
           throw { name: "Invalid token" }
@@ -55,32 +58,32 @@ const authentication = async (req, res, next) => {
 };
 
 const authenticationUser = async (req, res, next) => {
-    try {
-        // bawa kartu id gak lu ?
-        const {access_token} = req.headers
-        
-        if (!access_token) {
-            res.status(401).json({message: "Invalid Token"})
-        }
+  try {
+    // bawa kartu id gak lu ?
+    const { access_token } = req.headers
 
-        // ini token asli gak ?
-        const userId = verifyToken(access_token)
-
-        // cek apakah pemilik kartu id ini masih terdaftar di server atau tidak 
-        const user = await User.findOne({where: {email: userId.email}})
-
-        if (!user) {
-            res.status(401).json({message: "Invalid Token"})
-        }
-
-        req.user = user 
-
-        // bisa masuk
-        next()
-    } catch (error) {
-        console.log(error);
-        next(error)
+    if (!access_token) {
+      res.status(401).json({ message: "Invalid Token" })
     }
+
+    // ini token asli gak ?
+    const userId = verifyToken(access_token)
+
+    // cek apakah pemilik kartu id ini masih terdaftar di server atau tidak 
+    const user = await User.findOne({ where: { email: userId.email } })
+
+    if (!user) {
+      res.status(401).json({ message: "Invalid Token" })
+    }
+
+    req.user = user
+
+    // bisa masuk
+    next()
+  } catch (error) {
+    console.log(error);
+    next(error)
+  }
 }
 
 module.exports = { authentication, authenticationAdmin, authenticationUser };

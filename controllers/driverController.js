@@ -51,9 +51,16 @@ class driverController {
     }
   }
   static async fetchOrders(req, res, next) {
+    const id = req.user.id
     try {
       // where status = pending
-      const orders = await Order.findAll()
+      // id, AdministratorId
+      // dia akan nge-fetch semua order berdasarkan punya dia sendiri (id = id dia pas login)
+      const orders = await Order.findAll({
+        where: {
+          AdministratorId: id
+        }
+      })
 
       res.json(orders)
     } catch (error) {
@@ -70,11 +77,11 @@ class driverController {
       const order = await Order.findByPk(id)
 
       if (!order) throw { name: 'NOT_FOUND' }
-      
+
       await Order.update({ orderStatus: status, AdministratorId: user }, {
-          where: {
-              id
-          }
+        where: {
+          id
+        }
       })
 
       res.status(200).json({ message: 'Order status has been updated!' })
