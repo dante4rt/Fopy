@@ -5,6 +5,7 @@ const fs = require('fs');
 const app = require('../app');
 const bcrypt = require('bcryptjs');
 const { signToken } = require('../helpers/jwt');
+const { hashPassword } = require('../helpers/bcrypt');
 let access_token;
 
 beforeAll(async () => {
@@ -13,7 +14,7 @@ beforeAll(async () => {
     let dataUsers = JSON.parse(
       fs.readFileSync('./database/user.json', 'utf-8')
     ).map((el) => {
-      el.password = bcrypt.hashSync(el.password);
+      el.password = hashPassword(el.password);
       el.createdAt = new Date();
       el.updatedAt = new Date();
       delete el.id;
@@ -26,7 +27,6 @@ beforeAll(async () => {
         password: 'securepass123',
         balance: 2500000,
       });
-      console.log(access_token, `woiii`);
     });
 
     // Admin
@@ -161,14 +161,20 @@ describe('Divisi User Test', () => {
 
   // User melakukan login
   describe('POST /user/login', () => {
+    beforeAll(async () => {
+      await User.create({
+        email: 'alex011@example.com',
+        password: 'securepass1231',
+      });
+    });
     test('Perform successful User login ', async () => {
       const userDummy = {
-        email: 'alex01@example.com',
-        password: 'securepass123',
+        email: 'alex011@example.com',
+        password: 'securepass1231',
       };
       const response = await request(app).post('/user/login').send(userDummy);
 
-      expect(response.body).toHaveProperty('accessToken');
+      expect(response.body).toHaveProperty('access_token');
       expect(response.status).toBe(200);
     });
 
@@ -411,24 +417,69 @@ describe('Divisi User Test', () => {
         .set('access_token', access_token)
         .send({ amount: 1000 });
 
-        console.log(response, `woiii`);
+      console.log(response, `woiii`);
 
       expect(response.status).toEqual(201);
       expect(typeof response.body).toEqual('object');
       expect(response.body).toHaveProperty('token', expect.any(String));
       expect(response.body).toHaveProperty('redirect_url', expect.any(String));
     });
+
+    test('POST /midtrans failed because amount is empty', async () => {
+      const response = await request(app)
+        .post('/user/midtrans')
+        .set('access_token', access_token)
+        .send({ amount: '' });
+
+      expect(response.status).toEqual(400);
+      expect(typeof response.body).toEqual('object');
+      expect(response.body).toHaveProperty('message', expect.any(String));
+      expect(response.body.message).toEqual('Amount cannot be empty');
+    });
   });
 
-  test('POST /midtrans failed because amount is empty', async () => {
-    const response = await request(app)
-      .post('/user/midtrans')
-      .set('access_token', access_token)
-      .send({ amount: '' });
+  describe('POST /midtrans/check', () => {
+    test('POST /midtrans/check success', async () => {
+      const response = await request(app)
+        .post('/user/midtrans/check')
+        .set('access_token', access_token)
+        .send({
+          channel_response_message: 'Approved',
+          gross_amount: 10000,
+          order_id: 'FOPY_TX_1',
+        });
 
-    expect(response.status).toEqual(400);
-    expect(typeof response.body).toEqual('object');
-    expect(response.body).toHaveProperty('message', expect.any(String));
-    expect(response.body.message).toEqual('Amount cannot be empty')
+      expect(response.status).toEqual(200);
+      expect(typeof response.body).toEqual('object');
+      expect(response.body).toHaveProperty('message', expect.any(String));
+      expect(response.body.message).toEqual('Balance updated!');
+    });
+
+    test('POST /midtrans/check failed because body is empty', async () => {
+      const response = await request(app)
+        .post('/user/midtrans/check')
+        .set('access_token', access_token)
+
+      expect(response.status).toEqual(400);
+      expect(typeof response.body).toEqual('object');
+      expect(response.body).toHaveProperty('message', expect.any(String));
+      expect(response.body.message).toEqual('Data must be filled!');
+    });
+
+    test('POST /midtrans/check failed because payment failed', async () => {
+      const response = await request(app)
+        .post('/user/midtrans/check')
+        .set('access_token', access_token)
+        .send({
+          channel_response_message: 'Approved', 
+          gross_amount: 10000, 
+          order_id: 'FOPY_TX_111111'
+        })
+
+      expect(response.status).toEqual(400);
+      expect(typeof response.body).toEqual('object');
+      expect(response.body).toHaveProperty('message', expect.any(String));
+      expect(response.body.message).toEqual('Payment failed!');
+    });
   });
 });

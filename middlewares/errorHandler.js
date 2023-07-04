@@ -40,6 +40,8 @@ const errorHandler = (error, req, res, next) => {
     res.status(400).json({ message: 'Insufficient balance!' })
   } else if (error.name === 'AMOUNT_MUST_BE_FILLED') {
     res.status(400).json({ message: 'Amount cannot be empty' })
+  } else if (error.name === 'EMPTY_FIELD') {
+    res.status(400).json({ message: 'Data must be filled!' })
   }
   else {
     res.status(500).json({ message: "Internal Server Error" })
