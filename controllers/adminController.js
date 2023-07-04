@@ -31,7 +31,6 @@ module.exports = class AdminController {
         AdministratorId: findEmail.AdministratorId
       })
     } catch (error) {
-      console.log(error)
       next(error)
     }
   }
@@ -67,7 +66,6 @@ module.exports = class AdminController {
         AdministratorId: createNewMitra.AdministratorId
       })
     } catch (error) {
-      console.log(error)
       next(error)
     }
   }
@@ -123,7 +121,6 @@ module.exports = class AdminController {
 
       res.status(201).json(createServices)
     } catch (error) {
-      console.log(error)
       next(error)
     }
   }
@@ -186,7 +183,6 @@ module.exports = class AdminController {
       );
       res.status(200).json({ message: "Edit services success!" });
     } catch (error) {
-      console.log(error);
       next(error);
     }
   }
@@ -219,7 +215,6 @@ module.exports = class AdminController {
         throw { name: 'FORBIDDEN' };
       }
     } catch (error) {
-      console.log(error);
       next(error);
     }
   }
