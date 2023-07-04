@@ -14,7 +14,7 @@ class userController {
   /*Create Section*/
 
     // Register (Table User)
-    static async register (req, res) {
+    static async register (req, res, next) {
         try {
             const {username, email, password, imgUrl} = req.body
 
@@ -233,17 +233,17 @@ class userController {
   }
 
     // Membaca semua mitra
-    static async getAllMitra (req, res) {
+    static async getAllMitra (req, res, next) {
         try {
             const response = await Administrator.findAll({where: {status: "active", role: "mitra"}, attributes: {exclude: ['email', 'password', 'balance']}})
             res.status(200).json(response)
         } catch (error) {
-            res.status(500).json({message: "Internal Server Error"})
+            next(error)
         }
     }
 
     // Dapetin semua type = service
-    static async getAllService (req, res) {
+    static async getAllService (req, res, next) {
         try {
             const id = req.params.id
             const response = await Administrator.findAll(
@@ -258,12 +258,12 @@ class userController {
                 })
             res.status(200).json(response)
         } catch (error) {
-            res.status(500).json({message: "Internal Server Error"})
+            next(error)
         }
     }
 
     // Dapetin semua type = product
-    static async getAllProduct (req, res) {
+    static async getAllProduct (req, res, next) {
         try {
             const id = req.params.id
             const response = await Administrator.findAll(
@@ -278,12 +278,12 @@ class userController {
                 })
             res.status(200).json(response)
         } catch (error) {
-            res.status(500).json({message: "Internal Server Error"})
+            next(error)
         }
     }
 
     // Membaca mitra apa aja yang tersedia
-    static async getMitraByUser (req, res) {
+    static async getMitraByUser (req, res, next) {
         try {
             const id = req.params.id
             const response = await Administrator.findAll(
@@ -294,12 +294,12 @@ class userController {
                 })
             res.status(200).json(response)
         } catch (error) {
-            res.status(500).json({message: "Internal Server Error"})
+            next(error)
         }
     }
 
     // Membaca History Orderan Yang Berstatus Completed
-    static async getHistory (req, res) {
+    static async getHistory (req, res, next) {
         try {
             const response = await Order.findAll(
                 {
@@ -308,7 +308,7 @@ class userController {
                 })
             res.status(200).json(response)
         } catch (error) {
-            res.status(500).json({message: "Internal Server Error"})
+            next(error)
         }
     }
 }

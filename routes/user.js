@@ -30,7 +30,7 @@ router.post('/newOrder', userController.newOrder)
 
 router.get('/getOrder', userController.getOrder)
 
-// router.post('/midtrans', additionalController.generateMidtransToken)
+router.post('/midtrans', additionalController.generateMidtransToken)
 
 // router.post('/addOrderServices', userController.addOrderServices)
 
