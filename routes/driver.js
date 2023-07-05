@@ -9,5 +9,6 @@ router.post('/login', driverController.login);
 router.use(authentication);
 
 router.get('/orders', driverController.fetchOrders);
+router.get('/orders/:id', driverController.fetchOrderById);
 router.patch('/orders/:id', authorization, driverController.updateStatus);
 module.exports = router;

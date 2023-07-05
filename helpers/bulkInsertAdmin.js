@@ -111,7 +111,7 @@ async function bulkInsertAdmin() {
       AdministratorId: 1,
       UserId: 1,
       totalPrice: 15000,
-      orderStatus: 'Queued',
+      orderStatus: 'Pending',
       orderDate: new Date(),
       location: sequelize.fn(
         'ST_GeomFromText',
@@ -123,7 +123,7 @@ async function bulkInsertAdmin() {
       AdministratorId: 1,
       UserId: 1,
       totalPrice: 2000,
-      orderStatus: 'Queued',
+      orderStatus: 'Completed',
       orderDate: new Date(),
       location: sequelize.fn(
         'ST_GeomFromText',
