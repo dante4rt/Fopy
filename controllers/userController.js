@@ -3,7 +3,7 @@ const {
   Order,
   OrderDetail,
   Service,
-  User,
+  User, Topup
 } = require('../models');
 const bcrypt = require('bcryptjs');
 const { signToken } = require('../helpers/jwt');
@@ -214,10 +214,17 @@ class userController {
       const response = await User.findOne({
         where: { id: req.user.id },
         attributes: { exclude: ['password'] },
+        include: {
+          model: Topup,
+          where: {
+            status: 'Completed'
+          }
+        }
       });
 
       res.status(200).json(response);
     } catch (error) {
+      console.log(error);
       next(error);
     }
   }
@@ -316,7 +323,12 @@ class userController {
     try {
       const response = await Order.findAll({
         where: { UserId: req.user.id, orderStatus: 'Completed' },
-        include: [OrderDetail],
+        include: {
+          model: OrderDetail,
+          include: {
+            model: Service
+          }
+        }
       });
 
       if (response.length === 0) throw { name: 'NOT_FOUND' };
