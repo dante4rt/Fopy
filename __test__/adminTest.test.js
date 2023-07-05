@@ -557,3 +557,37 @@ describe('delete Mitra/Drivers', function () {
     expect(response.body).toHaveProperty('message', 'You are not authorized');
   });
 });
+
+describe('GET service by id', function() {
+  test('SUCCESS GET/services/1', async function () {
+    const response = await request(app)
+      .get('/admin/services/1')
+      .set('access_token', access_token);
+
+    expect(response.status).toEqual(200);
+    expect(typeof response.body).toEqual('object');
+    expect(response.body).toHaveProperty('id', expect.any(Number));
+    expect(response.body).toHaveProperty('AdministratorId', expect.any(Number));
+    expect(response.body).toHaveProperty('name', expect.any(String));
+    expect(response.body).toHaveProperty('price', expect.any(Number));
+    expect(response.body).toHaveProperty('description', expect.any(String));
+    expect(response.body).toHaveProperty('imgUrl', expect.any(String));
+    expect(response.body).toHaveProperty('type', expect.any(String));
+
+  });
+  test('failed GET/services/1 because access token is empty', async function () {
+    const response = await request(app)
+      .get('/admin/services/1')
+      .set('access_token', '');
+    expect(response.status).toEqual(401);
+    expect(response.body).toHaveProperty('message', 'Invalid token');
+  });
+
+  test('failed GET/services/300 because services not found', async function () {
+    const response = await request(app)
+      .get('/admin/services/190')
+      .set('access_token', access_token);
+    expect(response.status).toEqual(404);
+    expect(response.body).toHaveProperty('message', 'Entity not found!');
+  });
+})

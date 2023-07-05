@@ -35,21 +35,20 @@ const errorHandler = (error, req, res, next) => {
   } else if (error.name === 'FORBIDDEN') {
     res.status(403).json({ message: 'You are not authorized' });
   } else if (error.name === 'PAYMENT_UNSUCCESSFULLY') {
-    res.status(400).json({ message: 'Payment failed!' })
+    res.status(400).json({ message: 'Payment failed!' });
   } else if (error.name === 'INSUFFICIENT_BALANCE') {
-    res.status(400).json({ message: 'Insufficient balance!' })
+    res.status(400).json({ message: 'Insufficient balance!' });
   } else if (error.name === 'AMOUNT_MUST_BE_FILLED') {
-    res.status(400).json({ message: 'Amount cannot be empty' })
+    res.status(400).json({ message: 'Amount cannot be empty' });
   } else if (error.name === 'EMPTY_FIELD') {
-    res.status(400).json({ message: 'Data must be filled!' })
+    res.status(400).json({ message: 'Data must be filled!' });
   } else if (error.name === 'ORDER_HAS_BEEN_COMPLETED') {
-    res.status(400).json({ message: 'Order already been completed!' })
+    res.status(400).json({ message: 'Order already been completed!' });
+  } else if (error.name === 'NO_NEAREST_MITRA') {
+    res.status(404).json({ message: 'No Nearest Mitra Detected!' });
+  } else {
+    res.status(500).json({ message: 'Internal Server Error' });
   }
-  else {
-    res.status(500).json({ message: "Internal Server Error" })
-  }
-}
-
-
+};
 
 module.exports = errorHandler;

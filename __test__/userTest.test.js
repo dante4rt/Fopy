@@ -693,4 +693,32 @@ describe('Divisi User Test', () => {
       expect(response.body.message).toEqual('Entity not found!');
     });
   });
+  
+  describe('GET /getMitraByRadius', () => {
+    test('GET /getMitraByRadius success', async () => {
+      const response = await request(app)
+        .get('/user/getMitraByRadius')
+        .set('access_token', access_token);
+
+      expect(response.status).toBe(200);
+      expect(typeof response.body).toEqual('object');
+      expect(response.body[0]).toHaveProperty('id', expect.any(Number));
+      expect(response.body[0]).toHaveProperty('mitraName', expect.any(String));
+      expect(response.body[0]).toHaveProperty('status', expect.any(String));
+    });
+
+    test('GET /getMitraByRadius failed because no nearest mitra', async () => {
+      const response = await request(app)
+        .get('/user/getMitraByRadius')
+        .send({
+          long: '121212',
+          lat: '121212'
+        })
+        .set('access_token', access_token);
+
+      expect(response.status).toBe(404);
+      expect(typeof response.body).toEqual('object');
+      expect(response.body).toHaveProperty('message', expect.any(String));
+    });
+  });
 });
