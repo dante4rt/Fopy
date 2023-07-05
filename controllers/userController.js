@@ -3,7 +3,8 @@ const {
   Order,
   OrderDetail,
   Service,
-  User, Topup
+  User,
+  Topup,
 } = require('../models');
 const bcrypt = require('bcryptjs');
 const { signToken } = require('../helpers/jwt');
@@ -217,9 +218,9 @@ class userController {
         include: {
           model: Topup,
           where: {
-            status: 'Completed'
-          }
-        }
+            status: 'Completed',
+          },
+        },
       });
 
       res.status(200).json(response);
@@ -232,7 +233,15 @@ class userController {
   // Membaca orderan yang udah ada (Tabel Order)
   static async getOrder(req, res, next) {
     try {
-      const response = await Order.findAll({ where: { UserId: req.user.id } });
+      const response = await Order.findAll({
+        where: { UserId: req.user.id },
+        include: {
+          model: OrderDetail,
+          include: {
+            model: Service,
+          },
+        },
+      });
       res.status(200).json(response);
     } catch (error) {
       next(error);
@@ -326,14 +335,50 @@ class userController {
         include: {
           model: OrderDetail,
           include: {
-            model: Service
-          }
-        }
+            model: Service,
+          },
+        },
       });
 
       if (response.length === 0) throw { name: 'NOT_FOUND' };
-      
+
       res.status(200).json(response);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  // Nyari mitra berdasarkan Radius
+  static async findStoresByRadius(req, res, next) {
+    try {
+      // ini jarak berdasarkan meter
+      const distance = 5000;
+
+      // long dan lat ini di input secara dinamis dari user
+      const long = req.body.long || '-6.943536974604357';
+      const lat = req.body.lat || '107.59103925413515';
+
+      const result = await sequelize.query(
+        `SELECT a."id", a."mitraName", a."location", a.status  FROM "Administrators" a 
+            WHERE ST_DWithin(location, ST_MakePoint(:lat, :long), :distance, true) = true`,
+        {
+          replacements: {
+            distance: +distance,
+            long: parseFloat(long),
+            lat: parseFloat(lat),
+          },
+          logging: console.log,
+          plain: false,
+          raw: false,
+          type: sequelize.QueryTypes.SELECT,
+        }
+      );
+
+      if (result.length === 0) {
+        throw { name: 'NO_NEAREST_MITRA' };
+      }
+
+      res.status(200).json(result);
     } catch (error) {
       next(error);
     }

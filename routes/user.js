@@ -32,6 +32,8 @@ router.get('/getOrder', userController.getOrder)
 
 router.post('/midtrans', additionalController.generateMidtransToken)
 
+router.get('/getMitraByRadius', userController.findStoresByRadius)
+
 // router.post('/addOrderServices', userController.addOrderServices)
 
 module.exports = router

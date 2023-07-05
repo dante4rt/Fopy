@@ -278,6 +278,8 @@ module.exports = class AdminController {
         },
       });
 
+      if (!findServicesByMitra) throw { name: 'NOT_FOUND' }
+
       res.status(200).json(findServicesByMitra);
     } catch (error) {
       next(error);
