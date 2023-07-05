@@ -464,7 +464,7 @@ describe('Divisi User Test', () => {
         .send({
           channel_response_message: 'Approved',
           gross_amount: 10000,
-          order_id: 'FOPY_TX_1',
+          order_id: 'FOPY_TRANSACTION_1',
         });
 
       expect(response.status).toEqual(200);
@@ -523,7 +523,6 @@ describe('Divisi User Test', () => {
         .get('/user/getOrder')
         .set('access_token', access_token);
 
-      console.log(response.body[0], typeof response.body, `<<<< kk`);
       expect(response.status).toBe(200);
       expect(typeof response.body).toEqual('object');
       expect(response.body[0]).toHaveProperty('id', expect.any(Number));
