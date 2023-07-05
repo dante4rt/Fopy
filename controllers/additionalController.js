@@ -24,7 +24,7 @@ class additionalController {
 
       let parameter = {
         transaction_details: {
-          order_id: 'FOPY_TRX_' + order.id,
+          order_id: 'FOPY_TRANSACTION_' + order.id,
           gross_amount: order.amount,
         },
         credit_card: {
@@ -39,6 +39,7 @@ class additionalController {
       console.log(amount, transaction, `<<<<`);
       res.status(201).json(transaction);
     } catch (error) {
+      console.log(error, 'fffs');
       next(error);
     }
   }

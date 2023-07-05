@@ -296,7 +296,6 @@ describe('Driver Test', () => {
         .then((response) => {
           const { body, status } = response;
 
-          console.log(response.body, `<<< kk`);
           expect(status).toBe(400);
           expect(body).toHaveProperty('message', 'Order already been completed!');
         })
