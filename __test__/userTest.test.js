@@ -592,6 +592,7 @@ describe('Divisi User Test', () => {
       expect(response.body[0]).toHaveProperty('role', expect.any(String));
       expect(response.body[0]).toHaveProperty('status', expect.any(String));
     });
+
     test('GET /getMitraService/100 failed because entity not found', async () => {
       const response = await request(app)
         .get('/user/getMitraService/100')
@@ -708,13 +709,10 @@ describe('Divisi User Test', () => {
 
     test('GET /getMitraByRadius failed because no nearest mitra', async () => {
       const response = await request(app)
-        .get('/user/getMitraByRadius')
-        .send({
-          long: '121212',
-          lat: '121212'
-        })
+        .get('/user/getMitraByRadius?long=1212&lat=111')
         .set('access_token', access_token);
 
+        console.log(response, `<<< woi`);
       expect(response.status).toBe(404);
       expect(typeof response.body).toEqual('object');
       expect(response.body).toHaveProperty('message', expect.any(String));

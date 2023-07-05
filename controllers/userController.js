@@ -363,8 +363,8 @@ class userController {
       const distance = 5000;
 
       // long dan lat ini di input secara dinamis dari user
-      const long = req.body.long || '-6.943536974604357';
-      const lat = req.body.lat || '107.59103925413515';
+      const long = req.query.long || '-6.943536974604357';
+      const lat = req.query.lat || '107.59103925413515';
 
       const result = await sequelize.query(
         `SELECT a."id", a."mitraName", a."location", a.status  FROM "Administrators" a 
