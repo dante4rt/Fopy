@@ -323,7 +323,12 @@ class userController {
     try {
       const response = await Order.findAll({
         where: { UserId: req.user.id, orderStatus: 'Completed' },
-        include: [OrderDetail],
+        include: {
+          model: OrderDetail,
+          include: {
+            model: Service
+          }
+        }
       });
 
       if (response.length === 0) throw { name: 'NOT_FOUND' };
