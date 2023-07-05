@@ -42,6 +42,8 @@ const errorHandler = (error, req, res, next) => {
     res.status(400).json({ message: 'Amount cannot be empty' })
   } else if (error.name === 'EMPTY_FIELD') {
     res.status(400).json({ message: 'Data must be filled!' })
+  } else if (error.name === 'ORDER_HAS_BEEN_COMPLETED') {
+    res.status(400).json({ message: 'Order already been completed!' })
   }
   else {
     res.status(500).json({ message: "Internal Server Error" })

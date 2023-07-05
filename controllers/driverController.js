@@ -1,6 +1,6 @@
 const { comparePassword } = require('../helpers/bcrypt');
 const { generateToken, signToken } = require('../helpers/jwt');
-const { Administrator, Order } = require('../models');
+const { Administrator, Order, User } = require('../models');
 
 class driverController {
   static async login(req, res, next) {
@@ -63,6 +63,34 @@ class driverController {
       next(error);
     }
   }
+
+  static async fetchOrderById(req, res, next) {
+    try {
+      // where status = pending
+      const { id } = req.params
+      const orders = await Order.findByPk(id, {
+        include: {
+          model: User,
+          attributes: {
+            exclude: ['password']
+          }
+        }
+      });
+      
+      if (!orders) throw { name: 'NOT_FOUND' }
+
+      if (orders.orderStatus === 'Completed' || orders.orderStatus === 'completed') {
+        throw { name: 'ORDER_HAS_BEEN_COMPLETED' }
+      }
+
+      res.json(orders)
+    } catch (error) {
+      console.log(error);
+      next(error);
+    }
+  }
+
+
   static async updateStatus(req, res, next) {
     try {
       const { id } = req.params;

@@ -75,7 +75,7 @@ beforeAll(async function () {
         AdministratorId: 1,
         UserId: 1,
         totalPrice: 15000,
-        orderStatus: 'Queued',
+        orderStatus: 'Pending',
         orderDate: '2023-06-30 10:29:14.952 +0700',
         location: sequelize.fn(
           'ST_GeomFromText',
@@ -87,9 +87,9 @@ beforeAll(async function () {
       },
       {
         AdministratorId: 7,
-        UserId: 2,
+        UserId: 1,
         totalPrice: 2000,
-        orderStatus: 'Queued',
+        orderStatus: 'Completed',
         orderDate: '2023-06-30 10:29:14.952 +0700',
         location: sequelize.fn(
           'ST_GeomFromText',
@@ -241,6 +241,93 @@ describe('Driver Test', () => {
 
           expect(status).toBe(401);
           expect(body).toHaveProperty('message', 'Invalid token');
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    });
+  });
+
+  describe('GET /orders/1', () => {
+    test('200 success get orders by id 1', async function () {
+      await request(app)
+        .get('/driver/orders/1')
+        .set('access_token', validToken2)
+        .then((response) => {
+          const { body, status } = response;
+
+          expect(status).toBe(200);
+          expect(typeof body).toEqual('object');
+          expect(body).toHaveProperty('id', expect.any(Number));
+          expect(body).toHaveProperty(
+            'AdministratorId',
+            expect.any(Number)
+          );
+          expect(body).toHaveProperty('UserId', expect.any(Number));
+          expect(body).toHaveProperty('totalPrice', expect.any(Number));
+          expect(body).toHaveProperty('orderStatus', expect.any(String));
+          expect(body).toHaveProperty('orderDate', expect.any(String));
+          expect(body).toHaveProperty('deliveryMethod', expect.any(String));
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    });
+
+    test('401 get orders with invalid token', async function () {
+      await request(app)
+        .get('/driver/orders/1')
+        .set('access_token', invalidToken)
+        .then((response) => {
+          const { body, status } = response;
+
+          expect(status).toBe(401);
+          expect(body).toHaveProperty('message', 'Invalid token');
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    });
+
+    test('get orders/2 failed because order already been completed', async function () {
+      await request(app)
+        .get('/driver/orders/2')
+        .set('access_token', validToken2)
+        .then((response) => {
+          const { body, status } = response;
+
+          console.log(response.body, `<<< kk`);
+          expect(status).toBe(400);
+          expect(body).toHaveProperty('message', 'Order already been completed!');
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    });
+
+    test('401 get orders without token', async function () {
+      await request(app)
+        .get('/driver/orders/1')
+        .then((response) => {
+          const { body, status } = response;
+
+          expect(status).toBe(401);
+          expect(body).toHaveProperty('message', 'Invalid token');
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    });
+
+    test('get orders/2 failed because order not found', async function () {
+      await request(app)
+        .get('/driver/orders/300')
+        .set('access_token', validToken2)
+        .then((response) => {
+          const { body, status } = response;
+
+          expect(status).toBe(404);
+          expect(body).toHaveProperty('message', 'Entity not found!');
         })
         .catch((error) => {
           console.log(error);
