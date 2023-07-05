@@ -3,7 +3,7 @@ const {
   Order,
   OrderDetail,
   Service,
-  User,
+  User, Topup
 } = require('../models');
 const bcrypt = require('bcryptjs');
 const { signToken } = require('../helpers/jwt');
@@ -214,10 +214,17 @@ class userController {
       const response = await User.findOne({
         where: { id: req.user.id },
         attributes: { exclude: ['password'] },
+        include: {
+          model: Topup,
+          where: {
+            status: 'Completed'
+          }
+        }
       });
 
       res.status(200).json(response);
     } catch (error) {
+      console.log(error);
       next(error);
     }
   }

@@ -70,8 +70,7 @@ const authenticationUser = async (req, res, next) => {
         }
 
         req.user = user 
-
-        console.log(req.user, `<<< oi`);
+        
         next()
     } catch (error) {
         next(error)
