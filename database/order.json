@@ -25,6 +25,51 @@
       "orderDate": "2023-06-30 10:29:14.952 +0700",
       "location": "POINT(107.59278847659893 -6.942981263106864)",
       "deliveryMethod": "pickup"
+    },
+    {
+      "AdministratorId": 2,
+      "UserId": 1,
+      "totalPrice": 15000,
+      "orderStatus": "Pending",
+      "orderDate": "2023-06-30 10:29:14.952 +0700",
+      "location": "POINT(107.59278847659893 -6.942981263106864)",
+      "deliveryMethod": "delivery"
+    },
+    {
+      "AdministratorId": 2,
+      "UserId": 1,
+      "totalPrice": 2000,
+      "orderStatus": "Pending",
+      "orderDate": "2023-06-30 10:29:14.952 +0700",
+      "location": "POINT(107.59278847659893 -6.942981263106864)",
+      "deliveryMethod": "pickup"
+    },
+    {
+      "AdministratorId": 2,
+      "UserId": 2,
+      "totalPrice": 57000,
+      "orderStatus": "Completed",
+      "orderDate": "2023-06-30 10:29:14.952 +0700",
+      "location": "POINT(107.59278847659893 -6.942981263106864)",
+      "deliveryMethod": "pickup"
+    },
+    {
+      "AdministratorId": 1,
+      "UserId": 3,
+      "totalPrice": 20000,
+      "orderStatus": "Completed",
+      "orderDate": "2023-06-30 10:29:14.952 +0700",
+      "location": "POINT(106.7817287074042 -6.260773526637779)",
+      "deliveryMethod": "pickup"
+    },
+    {
+      "AdministratorId": 2,
+      "UserId": 2,
+      "totalPrice": 57000,
+      "orderStatus": "Completed",
+      "orderDate": "2023-06-30 10:29:14.952 +0700",
+      "location": "POINT(106.7817287074042 -6.260773526637779)",
+      "deliveryMethod": "pickup"
     }
   ]
   

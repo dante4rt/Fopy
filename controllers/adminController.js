@@ -150,7 +150,7 @@ module.exports = class AdminController {
       res
         .status(200)
         .json({
-          message: `updated status success from ${orderStatus} on id ${updateTheProduct}`,
+          message: `Status updated!`,
         });
     } catch (error) {
       next(error);
@@ -159,11 +159,10 @@ module.exports = class AdminController {
 
   static async getOrdersByMitra(req, res, next) {
     const id = req.admin.id;
+    console.log(req.admin, `<<< req admin`);
     try {
-      const getOrdersBymitra = await Order.findAll({
-        where: {
-          AdministratorId: id,
-        },
+
+      let options = {
         include: [
           {
             model: User,
@@ -175,7 +174,30 @@ module.exports = class AdminController {
             },
           },
         ],
-      });
+      }
+
+      if (req.admin.role !== 'admin') {
+        options = {
+          where: {
+            AdministratorId: id,
+          },
+          include: [
+            {
+              model: User,
+            },
+            {
+              model: OrderDetail,
+              include: {
+                model: Service,
+              },
+            },
+          ],
+        }
+      }
+
+      console.log(req.admin.role, `<<<`);
+      console.log(options, `<<<`);
+      const getOrdersBymitra = await Order.findAll(options);
       res.status(200).json(getOrdersBymitra);
     } catch (error) {
       next(error);
@@ -246,6 +268,7 @@ module.exports = class AdminController {
         throw { name: 'FORBIDDEN' };
       }
     } catch (error) {
+      console.log(error);
       next(error);
     }
   }

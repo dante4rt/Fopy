@@ -39,7 +39,6 @@ class additionalController {
       console.log(amount, transaction, `<<<<`);
       res.status(201).json(transaction);
     } catch (error) {
-      console.log(error, 'fffs');
       next(error);
     }
   }
