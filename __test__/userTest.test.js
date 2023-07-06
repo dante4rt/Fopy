@@ -712,7 +712,6 @@ describe('Divisi User Test', () => {
         .get('/user/getMitraByRadius?long=1212&lat=111')
         .set('access_token', access_token);
 
-        console.log(response, `<<< woi`);
       expect(response.status).toBe(404);
       expect(typeof response.body).toEqual('object');
       expect(response.body).toHaveProperty('message', expect.any(String));

@@ -66,7 +66,9 @@ class userController {
       }
 
       // check, is there an email in our server with the one we just inputed ?
-      const [user] = await User.findAll({ where: { email: email } });
+      const [user] = await User.findAll({
+        where: { email: email },
+      });
       if (!user) {
         res.status(404).json({ message: 'Email or Password is incorrect' });
         return;
@@ -88,8 +90,9 @@ class userController {
       });
 
       // after hashing the token we send it to headers browser
-      res.status(200).json({ access_token });
+      res.status(200).json({ access_token, balance: user.balance });
     } catch (error) {
+      console.log(error);
       next(error);
     }
   }
@@ -97,7 +100,7 @@ class userController {
   // Membuat Orderan (Table Orders)
   static async newOrder(req, res, next) {
     const t = await sequelize.transaction(); // Start a transaction
-  
+
     try {
       const { order, products } = req.body;
       const incomingOrder = await Order.create(
@@ -112,58 +115,57 @@ class userController {
         },
         { transaction: t } // Pass the transaction to the create method
       );
-  
+
       let totalPrice = 0;
-  
+
       for (const product of products) {
         const service = await Service.findByPk(product.ServiceId);
         let productTotalPrice;
-  
+
         if (product.totalPage) {
           productTotalPrice = service.price * product.totalPage;
         } else {
           productTotalPrice = service.price * product.quantity;
         }
-  
+
         totalPrice += productTotalPrice;
-  
+
         await OrderDetail.create(
           {
             ServiceId: product.ServiceId,
             OrderId: incomingOrder.id,
             quantity: product.quantity,
             totalPage: product.totalPage || 0,
-            url: product.url || "",
+            url: product.url || '',
           },
           { transaction: t } // Pass the transaction to the create method
         );
       }
-  
+
       await incomingOrder.update({ totalPrice }, { transaction: t }); // Update the totalPrice in the order
-  
+
       // Deduct the totalPrice from the user's balance
       const user = await User.findByPk(req.user.id);
-  
+
       if (user.balance < totalPrice) {
         await incomingOrder.destroy({ transaction: t }); // Delete the incomingOrder if the balance is insufficient
         throw { name: 'INSUFFICIENT_BALANCE' };
       }
-  
+
       user.balance -= totalPrice;
       await user.save({ transaction: t });
-  
+
       // Add the totalPrice to the administrator's balance
       const administrator = await Administrator.findByPk(order.AdministratorId);
       administrator.balance += totalPrice;
       await administrator.save({ transaction: t });
-  
+
       await t.commit(); // Commit the transaction
-  
+
       res.status(201).json({
         message: `Order by user id ${incomingOrder.UserId} has been created`,
       });
     } catch (error) {
-      console.log(error, "<<<<<< ini error newOrder")
       await t.rollback(); // Rollback the transaction if an error occurred
       next(error); // Send error message to the client
     }
@@ -243,12 +245,17 @@ class userController {
     try {
       const response = await Order.findAll({
         where: { UserId: req.user.id },
-        include: {
-          model: OrderDetail,
-          include: {
-            model: Service,
+        include: [
+          {
+            model: OrderDetail,
+            include: {
+              model: Service,
+            },
           },
-        },
+          {
+            model: User,
+          },
+        ],
       });
       res.status(200).json(response);
     } catch (error) {
